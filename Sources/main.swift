@@ -1,4 +1,3 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+let client = PetstoreClient()
 
-print("Hello, world!")
+client.pet.addPet(pet: Pet(id: 1, name: "Fido", photoUrls: ["https://example.com/fido.jpg"]))
