@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:PetstoreClient}",
+            "name": "Debug PetstoreClient",
+            "program": "${workspaceFolder:PetstoreClient}/.build/debug/PetstoreClient",
+            "preLaunchTask": "swift: Build Debug PetstoreClient"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:PetstoreClient}",
+            "name": "Release PetstoreClient",
+            "program": "${workspaceFolder:PetstoreClient}/.build/release/PetstoreClient",
+            "preLaunchTask": "swift: Build Release PetstoreClient"
+        }
+    ]
+}
