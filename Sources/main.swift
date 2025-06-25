@@ -70,10 +70,27 @@ func deletePet() async {
     }
 }
 
+func getInventory() async {
+    print("Getting inventory...")
+    do {
+        print("Making API request...")
+        let inventory = try await client.store.getInventory()
+        print("✅ Inventory successfully fetched!")
+        print(inventory)
+
+    } catch {
+        print("❌ Failed to process pet: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}
+
 Task {
     // await addPet()
     // await updatePet()
-    await deletePet()
+    // await deletePet()
+    await getInventory()
     exit(0)
 }
 
