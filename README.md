@@ -2,8 +2,8 @@
 
 ## Structure
 
-- `PetstoreApplication`: Example main program that consumes the Petstore SDK.
-- `PetstoreSDK`: The Fern-generated Petstore SDK.
+- [`PetstoreApplication`](/Sources/PetstoreApplication): Example main program that consumes the Petstore SDK.
+- [`PetstoreSDK`](/Sources/PetstoreSDK): The Fern-generated Petstore SDK.
 
 ## Instructions
 
