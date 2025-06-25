@@ -1,11 +1,11 @@
-struct PetSubpackage: Sendable {
+public struct PetSubpackage: Sendable {
     private let httpClient: HTTPClient
 
-    init(baseURL: String) {
+    public init(baseURL: String) {
         self.httpClient = HTTPClient(baseURL: baseURL)
     }
 
-    func updatePet(pet: Pet) async throws -> Pet {
+    public func updatePet(pet: Pet) async throws -> Pet {
         return try await httpClient.performRequest(
             path: "/pet",
             method: .put,
@@ -14,7 +14,7 @@ struct PetSubpackage: Sendable {
         )
     }
 
-    func addPet(pet: Pet) async throws -> Pet {
+    public func addPet(pet: Pet) async throws -> Pet {
         return try await httpClient.performRequest(
             path: "/pet",
             method: .post,
@@ -23,7 +23,7 @@ struct PetSubpackage: Sendable {
         )
     }
 
-    func deletePet(id: Int) async throws {
+    public func deletePet(id: Int) async throws {
         try await httpClient.performVoidRequest(
             path: "/pet/\(id)",
             method: .delete

@@ -1,18 +1,18 @@
-struct Pet: Codable, Hashable, Sendable {
-    let id: Int?
-    let name: String
-    let category: Category?
-    let photoUrls: [String]
-    let tags: [Tag]?
-    let status: Status?
+public struct Pet: Codable, Hashable, Sendable {
+    public let id: Int?
+    public let name: String
+    public let category: Category?
+    public let photoUrls: [String]
+    public let tags: [Tag]?
+    public let status: Status?
 
-    enum Status: String, Codable, Hashable, Sendable, CaseIterable {
+    public enum Status: String, Codable, Hashable, Sendable, CaseIterable {
         case available = "available"
         case pending = "pending"
         case sold = "sold"
     }
 
-    init(
+    public init(
         id: Int? = nil,
         name: String,
         category: Category? = nil,

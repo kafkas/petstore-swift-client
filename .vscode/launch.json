@@ -17,6 +17,24 @@
             "name": "Release PetstoreClient",
             "program": "${workspaceFolder:PetstoreClient}/.build/release/PetstoreClient",
             "preLaunchTask": "swift: Build Release PetstoreClient"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:PetstoreClient}",
+            "name": "Debug PetstoreApplication",
+            "program": "${workspaceFolder:PetstoreClient}/.build/debug/PetstoreApplication",
+            "preLaunchTask": "swift: Build Debug PetstoreApplication"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:PetstoreClient}",
+            "name": "Release PetstoreApplication",
+            "program": "${workspaceFolder:PetstoreClient}/.build/release/PetstoreApplication",
+            "preLaunchTask": "swift: Build Release PetstoreApplication"
         }
     ]
 }

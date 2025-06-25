@@ -1,4 +1,5 @@
 import Foundation
+import PetstoreSDK
 
 let client = PetstoreClient(baseURL: "http://localhost:8080")
 

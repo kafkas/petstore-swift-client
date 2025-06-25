@@ -1,6 +1,6 @@
 import Foundation
 
-enum PetstoreError: Error, LocalizedError {
+public enum PetstoreError: Error, LocalizedError {
     case invalidURL
     case encodingError(Error)
     case decodingError(Error)
@@ -11,7 +11,7 @@ enum PetstoreError: Error, LocalizedError {
     case networkError(Error)
     case petNotFound
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .invalidURL:
             return "Invalid URL"
