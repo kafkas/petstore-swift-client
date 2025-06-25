@@ -1,13 +1,3 @@
-struct Category: Codable, Hashable, Sendable {
-    let id: Int?
-    let name: String?
-}
-
-struct Tag: Codable, Hashable, Sendable {
-    let id: Int?
-    let name: String?
-}
-
 struct Pet: Codable, Hashable, Sendable {
     let id: Int?
     let name: String
