@@ -13,7 +13,8 @@ Task {
     // Store methods
 
     // await getInventory()
-    await placeOrder()
+    // await placeOrder()
+    await getOrderById()
 
     exit(0)
 }

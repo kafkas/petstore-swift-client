@@ -39,3 +39,23 @@ func placeOrder() async {
         }
     }
 }
+
+func getOrderById() async {
+    print("Getting order by ID...")
+    do {
+        print("Making API request...")
+        let orderId: Int64 = 1
+        let order = try await client.store.getOrderById(orderId: orderId)
+        print("✅ Order successfully fetched!")
+        print("Order ID: \(order.id ?? 0)")
+        print("Pet ID: \(order.petId ?? 0)")
+        print("Quantity: \(order.quantity ?? 0)")
+        print("Status: \(order.status?.rawValue ?? "unknown")")
+        print("Complete: \(order.complete ?? false)")
+    } catch {
+        print("❌ Failed to get order: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}

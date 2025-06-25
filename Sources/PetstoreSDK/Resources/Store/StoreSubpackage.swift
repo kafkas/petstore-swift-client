@@ -21,4 +21,12 @@ public struct StoreSubpackage: Sendable {
             responseType: Order.self
         )
     }
+
+    public func getOrderById(orderId: Int64) async throws -> Order {
+        return try await httpClient.performRequest(
+            path: "/store/order/\(orderId)",
+            method: .get,
+            responseType: Order.self
+        )
+    }
 }
