@@ -3,8 +3,8 @@ import Foundation
 struct HTTPClient {
     let baseURL: String
     private let session = URLSession.shared
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
+    private let encoder = Serde.encoder
+    private let decoder = Serde.decoder
 
     init(baseURL: String) {
         self.baseURL = baseURL

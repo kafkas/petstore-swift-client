@@ -50,6 +50,7 @@ func getOrderById() async {
         print("Order ID: \(order.id ?? 0)")
         print("Pet ID: \(order.petId ?? 0)")
         print("Quantity: \(order.quantity ?? 0)")
+        print("Ship Date: \(order.shipDate ?? Date())")
         print("Status: \(order.status?.rawValue ?? "unknown")")
         print("Complete: \(order.complete ?? false)")
     } catch {
