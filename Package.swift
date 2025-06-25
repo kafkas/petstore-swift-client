@@ -5,10 +5,16 @@ import PackageDescription
 
 let package = Package(
     name: "PetstoreClient",
+    platforms: [
+        .macOS(.v12),
+        .iOS(.v15),
+        .watchOS(.v8),
+        .tvOS(.v15),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .executableTarget(
-            name: "PetstoreClient"),
+            name: "PetstoreClient")
     ]
 )
