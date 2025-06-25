@@ -4,10 +4,9 @@ struct PetEndpointGroup {
     let baseURL: String
     private let session = URLSession.shared
 
-    func addPet(pet: Pet, completion: @escaping (Result<Pet, PetstoreError>) -> Void) {
+    func addPet(pet: Pet) async throws -> Pet {
         guard let url = URL(string: "\(baseURL)/pet") else {
-            completion(.failure(.invalidURL))
-            return
+            throw PetstoreError.invalidURL
         }
 
         var request = URLRequest(url: url)
@@ -18,45 +17,42 @@ struct PetEndpointGroup {
             let jsonData = try JSONEncoder().encode(pet)
             request.httpBody = jsonData
         } catch {
-            completion(.failure(.encodingError(error)))
-            return
+            throw PetstoreError.encodingError(error)
         }
 
-        session.dataTask(with: request) { data, response, error in
-            if let error: any Error = error {
-                completion(.failure(.networkError(error)))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(.invalidResponse))
-                return
-            }
+        do {
+            let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(.invalidResponse))
-                return
+                throw PetstoreError.invalidResponse
             }
 
             switch httpResponse.statusCode {
             case 200:
                 do {
                     let createdPet = try JSONDecoder().decode(Pet.self, from: data)
-                    completion(.success(createdPet))
+                    return createdPet
                 } catch {
-                    completion(.failure(.decodingError(error)))
+                    throw PetstoreError.decodingError(error)
                 }
 
             case 400:
-                completion(.failure(.invalidInput))
+                throw PetstoreError.invalidInput
 
             case 422:
-                completion(.failure(.validationException))
+                throw PetstoreError.validationException
 
             default:
-                completion(.failure(.httpError(httpResponse.statusCode)))
+                throw PetstoreError.httpError(httpResponse.statusCode)
             }
-        }.resume()
+
+        } catch {
+            if error is PetstoreError {
+                throw error
+            } else {
+                throw PetstoreError.networkError(error)
+            }
+        }
     }
 
     func deletePet(id: Int) {
