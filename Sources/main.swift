@@ -55,9 +55,25 @@ func updatePet() async {
     }
 }
 
+func deletePet() async {
+    print("Deleting pet...")
+    do {
+        print("Making API request...")
+        try await client.pet.deletePet(id: fido.id!)
+        print("✅ Pet successfully deleted!")
+
+    } catch {
+        print("❌ Failed to process pet: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}
+
 Task {
     // await addPet()
-    await updatePet()
+    // await updatePet()
+    await deletePet()
     exit(0)
 }
 

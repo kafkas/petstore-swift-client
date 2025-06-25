@@ -109,8 +109,43 @@ struct PetEndpointGroup {
         }
     }
 
-    func deletePet(id: Int) {
-        fatalError("Not implemented")
+    func deletePet(id: Int) async throws {
+        guard let url = URL(string: "\(baseURL)/pet/\(id)") else {
+            throw PetstoreError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+
+        do {
+            let (_, response) = try await session.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw PetstoreError.invalidResponse
+            }
+
+            switch httpResponse.statusCode {
+            case 200:
+                // Pet deleted successfully
+                return
+
+            case 400:
+                throw PetstoreError.invalidInput
+
+            case 404:
+                throw PetstoreError.petNotFound
+
+            default:
+                throw PetstoreError.httpError(httpResponse.statusCode)
+            }
+
+        } catch {
+            if error is PetstoreError {
+                throw error
+            } else {
+                throw PetstoreError.networkError(error)
+            }
+        }
     }
 }
 
