@@ -12,4 +12,13 @@ public struct StoreSubpackage: Sendable {
             responseType: [String: Int].self
         )
     }
+
+    public func placeOrder(order: Order) async throws -> Order {
+        return try await httpClient.performRequest(
+            path: "/store/order",
+            method: .post,
+            body: order,
+            responseType: Order.self
+        )
+    }
 }
