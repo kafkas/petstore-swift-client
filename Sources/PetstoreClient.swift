@@ -1,77 +1,89 @@
 import Foundation
 
-struct PetEndpointGroup {
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+}
+
+struct PetSubpackage {
     let baseURL: String
     private let session = URLSession.shared
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
+
+    // MARK: - Public API methods
 
     func updatePet(pet: Pet) async throws -> Pet {
-        guard let url = URL(string: "\(baseURL)/pet") else {
-            throw PetstoreError.invalidURL
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        do {
-            let jsonData = try JSONEncoder().encode(pet)
-            request.httpBody = jsonData
-        } catch {
-            throw PetstoreError.encodingError(error)
-        }
-
-        do {
-            let (data, response) = try await session.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw PetstoreError.invalidResponse
-            }
-
-            switch httpResponse.statusCode {
-            case 200:
-                do {
-                    let updatedPet = try JSONDecoder().decode(Pet.self, from: data)
-                    return updatedPet
-                } catch {
-                    throw PetstoreError.decodingError(error)
-                }
-
-            case 400:
-                throw PetstoreError.invalidInput
-
-            case 404:
-                throw PetstoreError.petNotFound
-
-            case 422:
-                throw PetstoreError.validationException
-
-            default:
-                throw PetstoreError.httpError(httpResponse.statusCode)
-            }
-
-        } catch {
-            if error is PetstoreError {
-                throw error
-            } else {
-                throw PetstoreError.networkError(error)
-            }
-        }
+        return try await performRequest(
+            path: "/pet",
+            method: .put,
+            body: pet,
+            responseType: Pet.self
+        )
     }
 
     func addPet(pet: Pet) async throws -> Pet {
-        guard let url = URL(string: "\(baseURL)/pet") else {
+        return try await performRequest(
+            path: "/pet",
+            method: .post,
+            body: pet,
+            responseType: Pet.self
+        )
+    }
+
+    func deletePet(id: Int) async throws {
+        try await performVoidRequest(
+            path: "/pet/\(id)",
+            method: .delete
+        )
+    }
+
+    // MARK: - Private methods
+
+    private func performRequest<T: Decodable>(
+        path: String,
+        method: HTTPMethod,
+        body: (any Encodable)? = nil,
+        responseType: T.Type
+    ) async throws -> T {
+        let data = try await executeRequest(path: path, method: method, body: body)
+
+        do {
+            return try decoder.decode(responseType, from: data)
+        } catch {
+            throw PetstoreError.decodingError(error)
+        }
+    }
+
+    private func performVoidRequest(
+        path: String,
+        method: HTTPMethod,
+        body: (any Encodable)? = nil
+    ) async throws {
+        _ = try await executeRequest(path: path, method: method, body: body)
+    }
+
+    private func executeRequest(
+        path: String,
+        method: HTTPMethod,
+        body: (any Encodable)? = nil
+    ) async throws -> Data {
+        guard let url = URL(string: "\(baseURL)\(path)") else {
             throw PetstoreError.invalidURL
         }
 
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = method.rawValue
 
-        do {
-            let jsonData = try JSONEncoder().encode(pet)
-            request.httpBody = jsonData
-        } catch {
-            throw PetstoreError.encodingError(error)
+        if let body = body {
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            do {
+                request.httpBody = try encoder.encode(body)
+            } catch {
+                throw PetstoreError.encodingError(error)
+            }
         }
 
         do {
@@ -81,24 +93,9 @@ struct PetEndpointGroup {
                 throw PetstoreError.invalidResponse
             }
 
-            switch httpResponse.statusCode {
-            case 200:
-                do {
-                    let createdPet = try JSONDecoder().decode(Pet.self, from: data)
-                    return createdPet
-                } catch {
-                    throw PetstoreError.decodingError(error)
-                }
+            try handleResponseStatus(httpResponse.statusCode)
 
-            case 400:
-                throw PetstoreError.invalidInput
-
-            case 422:
-                throw PetstoreError.validationException
-
-            default:
-                throw PetstoreError.httpError(httpResponse.statusCode)
-            }
+            return data
 
         } catch {
             if error is PetstoreError {
@@ -109,42 +106,18 @@ struct PetEndpointGroup {
         }
     }
 
-    func deletePet(id: Int) async throws {
-        guard let url = URL(string: "\(baseURL)/pet/\(id)") else {
-            throw PetstoreError.invalidURL
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-
-        do {
-            let (_, response) = try await session.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw PetstoreError.invalidResponse
-            }
-
-            switch httpResponse.statusCode {
-            case 200:
-                // Pet deleted successfully
-                return
-
-            case 400:
-                throw PetstoreError.invalidInput
-
-            case 404:
-                throw PetstoreError.petNotFound
-
-            default:
-                throw PetstoreError.httpError(httpResponse.statusCode)
-            }
-
-        } catch {
-            if error is PetstoreError {
-                throw error
-            } else {
-                throw PetstoreError.networkError(error)
-            }
+    private func handleResponseStatus(_ statusCode: Int) throws {
+        switch statusCode {
+        case 200...299:
+            return
+        case 400:
+            throw PetstoreError.invalidInput
+        case 404:
+            throw PetstoreError.petNotFound
+        case 422:
+            throw PetstoreError.validationException
+        default:
+            throw PetstoreError.httpError(statusCode)
         }
     }
 }
@@ -185,7 +158,7 @@ enum PetstoreError: Error, LocalizedError {
     }
 }
 
-struct StoreEndpointGroup {
+struct StoreSubpackage {
     let baseURL: String
 
     func deleteOrder(id: Int) {
@@ -199,11 +172,11 @@ struct StoreEndpointGroup {
 }
 
 struct PetstoreClient {
-    let pet: PetEndpointGroup
-    let store: StoreEndpointGroup
+    let pet: PetSubpackage
+    let store: StoreSubpackage
 
     init(baseURL: String) {
-        self.pet = PetEndpointGroup(baseURL: baseURL)
-        self.store = StoreEndpointGroup(baseURL: baseURL)
+        self.pet = PetSubpackage(baseURL: baseURL)
+        self.store = StoreSubpackage(baseURL: baseURL)
     }
 }
