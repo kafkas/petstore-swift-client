@@ -74,7 +74,7 @@ func uploadFile() async {
         print("Creating sample image data...")
         // Create sample binary data (simulating an image file)
         let sampleImageData = "This is sample image data for Fido".data(using: .utf8)!
-        
+
         print("Making API request...")
         let response = try await client.pet.uploadFile(
             petId: Int64(fido.id!),

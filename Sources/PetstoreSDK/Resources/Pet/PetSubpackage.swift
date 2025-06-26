@@ -38,12 +38,14 @@ public struct PetSubpackage: Sendable {
         additionalMetadata: String? = nil
     ) async throws -> ApiResponse {
         var path = "/pet/\(petId)/uploadImage"
-        
+
         if let metadata = additionalMetadata,
-           let encodedMetadata = metadata.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let encodedMetadata = metadata.addingPercentEncoding(
+                withAllowedCharacters: .urlQueryAllowed)
+        {
             path += "?additionalMetadata=\(encodedMetadata)"
         }
-        
+
         return try await httpClient.performFileUploadRequest(
             path: path,
             method: .post,
