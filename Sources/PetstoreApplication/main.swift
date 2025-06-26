@@ -9,13 +9,22 @@ Task {
     // await addPet()
     // await updatePet()
     // await deletePet()
-    await uploadFile()
+    // await uploadFile()
 
     // Store methods
 
     // await getInventory()
     // await placeOrder()
     // await getOrderById()
+
+    // User methods
+    // await createUser()
+    // await createUsersWithListInput()
+    await loginUser()
+    // await logoutUser()
+    // await getUserByName()
+    // await updateUser()
+    // await deleteUser()
 
     exit(0)
 }
