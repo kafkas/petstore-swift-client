@@ -67,3 +67,29 @@ func deletePet() async {
         }
     }
 }
+
+func uploadFile() async {
+    print("Uploading file for pet...")
+    do {
+        print("Creating sample image data...")
+        // Create sample binary data (simulating an image file)
+        let sampleImageData = "This is sample image data for Fido".data(using: .utf8)!
+        
+        print("Making API request...")
+        let response = try await client.pet.uploadFile(
+            petId: Int64(fido.id!),
+            fileData: sampleImageData,
+            additionalMetadata: "Profile picture for Fido"
+        )
+        print("✅ File successfully uploaded!")
+        print("Response code: \(response.code ?? 0)")
+        print("Response type: \(response.type ?? "unknown")")
+        print("Response message: \(response.message ?? "no message")")
+
+    } catch {
+        print("❌ Failed to upload file: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}

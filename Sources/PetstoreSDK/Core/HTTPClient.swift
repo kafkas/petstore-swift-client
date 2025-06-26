@@ -33,6 +33,27 @@ struct HTTPClient {
         _ = try await executeRequest(path: path, method: method, body: body)
     }
 
+    func performFileUploadRequest<T: Decodable>(
+        path: String,
+        method: HTTPMethod,
+        fileData: Data,
+        contentType: String = "application/octet-stream",
+        responseType: T.Type
+    ) async throws -> T {
+        let data = try await executeFileUploadRequest(
+            path: path,
+            method: method,
+            fileData: fileData,
+            contentType: contentType
+        )
+
+        do {
+            return try decoder.decode(responseType, from: data)
+        } catch {
+            throw PetstoreError.decodingError(error)
+        }
+    }
+
     private func executeRequest(
         path: String,
         method: HTTPMethod,
@@ -53,6 +74,41 @@ struct HTTPClient {
                 throw PetstoreError.encodingError(error)
             }
         }
+
+        do {
+            let (data, response) = try await session.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw PetstoreError.invalidResponse
+            }
+
+            try handleResponseStatus(httpResponse.statusCode)
+
+            return data
+
+        } catch {
+            if error is PetstoreError {
+                throw error
+            } else {
+                throw PetstoreError.networkError(error)
+            }
+        }
+    }
+
+    private func executeFileUploadRequest(
+        path: String,
+        method: HTTPMethod,
+        fileData: Data,
+        contentType: String
+    ) async throws -> Data {
+        guard let url = URL(string: "\(baseURL)\(path)") else {
+            throw PetstoreError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        request.httpBody = fileData
 
         do {
             let (data, response) = try await session.data(for: request)

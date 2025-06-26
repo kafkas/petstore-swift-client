@@ -9,12 +9,13 @@ Task {
     // await addPet()
     // await updatePet()
     // await deletePet()
+    await uploadFile()
 
     // Store methods
 
     // await getInventory()
     // await placeOrder()
-    await getOrderById()
+    // await getOrderById()
 
     exit(0)
 }

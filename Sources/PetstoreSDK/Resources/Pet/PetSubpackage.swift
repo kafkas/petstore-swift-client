@@ -1,3 +1,5 @@
+import Foundation
+
 public struct PetSubpackage: Sendable {
     private let httpClient: HTTPClient
 
@@ -27,6 +29,27 @@ public struct PetSubpackage: Sendable {
         try await httpClient.performVoidRequest(
             path: "/pet/\(id)",
             method: .delete
+        )
+    }
+
+    public func uploadFile(
+        petId: Int64,
+        fileData: Data,
+        additionalMetadata: String? = nil
+    ) async throws -> ApiResponse {
+        var path = "/pet/\(petId)/uploadImage"
+        
+        if let metadata = additionalMetadata,
+           let encodedMetadata = metadata.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            path += "?additionalMetadata=\(encodedMetadata)"
+        }
+        
+        return try await httpClient.performFileUploadRequest(
+            path: path,
+            method: .post,
+            fileData: fileData,
+            contentType: "application/octet-stream",
+            responseType: ApiResponse.self
         )
     }
 }
