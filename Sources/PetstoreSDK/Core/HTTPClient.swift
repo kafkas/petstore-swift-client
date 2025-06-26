@@ -3,8 +3,8 @@ import Foundation
 struct HTTPClient {
     let baseURL: String
     private let session = URLSession.shared
-    private let encoder = Serde.encoder
-    private let decoder = Serde.decoder
+    private let jsonEncoder = Serde.jsonEncoder
+    private let jsonDecoder = Serde.jsonDecoder
 
     init(baseURL: String) {
         self.baseURL = baseURL
@@ -16,10 +16,24 @@ struct HTTPClient {
         body: (any Encodable)? = nil,
         responseType: T.Type
     ) async throws -> T {
-        let data = try await executeRequest(path: path, method: method, body: body)
+        let (data, contentType) = try await executeRequestWithContentType(
+            path: path, method: method, body: body)
+
+        if T.self == String.self {
+            do {
+                return try jsonDecoder.decode(responseType, from: data)
+            } catch {
+                if contentType?.lowercased().contains("text") == true,
+                    let string = String(data: data, encoding: .utf8) as? T
+                {
+                    return string
+                }
+                throw PetstoreError.decodingError(error)
+            }
+        }
 
         do {
-            return try decoder.decode(responseType, from: data)
+            return try jsonDecoder.decode(responseType, from: data)
         } catch {
             throw PetstoreError.decodingError(error)
         }
@@ -48,31 +62,10 @@ struct HTTPClient {
         )
 
         do {
-            return try decoder.decode(responseType, from: data)
+            return try jsonDecoder.decode(responseType, from: data)
         } catch {
             throw PetstoreError.decodingError(error)
         }
-    }
-
-    func performStringRequest(
-        path: String,
-        method: HTTPMethod,
-        body: (any Encodable)? = nil
-    ) async throws -> String {
-        let data = try await executeRequest(path: path, method: method, body: body)
-        
-        guard let string = String(data: data, encoding: .utf8) else {
-            throw PetstoreError.decodingError(
-                DecodingError.dataCorrupted(
-                    DecodingError.Context(
-                        codingPath: [],
-                        debugDescription: "Could not convert response data to UTF-8 string"
-                    )
-                )
-            )
-        }
-        
-        return string
     }
 
     private func executeRequest(
@@ -80,6 +73,16 @@ struct HTTPClient {
         method: HTTPMethod,
         body: (any Encodable)? = nil
     ) async throws -> Data {
+        let (data, _) = try await executeRequestWithContentType(
+            path: path, method: method, body: body)
+        return data
+    }
+
+    private func executeRequestWithContentType(
+        path: String,
+        method: HTTPMethod,
+        body: (any Encodable)? = nil
+    ) async throws -> (Data, String?) {
         guard let url = URL(string: "\(baseURL)\(path)") else {
             throw PetstoreError.invalidURL
         }
@@ -90,7 +93,7 @@ struct HTTPClient {
         if let body = body {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             do {
-                request.httpBody = try encoder.encode(body)
+                request.httpBody = try jsonEncoder.encode(body)
             } catch {
                 throw PetstoreError.encodingError(error)
             }
@@ -105,7 +108,8 @@ struct HTTPClient {
 
             try handleResponseStatus(httpResponse.statusCode)
 
-            return data
+            let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type")
+            return (data, contentType)
 
         } catch {
             if error is PetstoreError {

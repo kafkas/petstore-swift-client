@@ -1,13 +1,13 @@
 import Foundation
 
 struct Serde {
-    static var encoder: JSONEncoder {
+    static var jsonEncoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         return encoder
     }
 
-    static var decoder: JSONDecoder {
+    static var jsonDecoder: JSONDecoder {
         let decoder = JSONDecoder()
         // Use custom strategy for robust ISO 8601 date parsing with fractional seconds
         decoder.dateDecodingStrategy = .custom { decoder in

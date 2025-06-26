@@ -41,9 +41,10 @@ public struct UserSubpackage: Sendable {
             path += "?" + queryParams.joined(separator: "&")
         }
 
-        return try await httpClient.performStringRequest(
+        return try await httpClient.performRequest(
             path: path,
-            method: .get
+            method: .get,
+            responseType: String.self
         )
     }
 
