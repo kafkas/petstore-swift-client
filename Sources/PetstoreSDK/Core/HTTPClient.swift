@@ -10,6 +10,59 @@ struct HTTPClient {
         self.baseURL = baseURL
     }
 
+    func buildRequest(
+        method: HTTPMethod,
+        contentType: MIMEType,
+        additionalHeaders: [String: String],
+        path: String,
+        queryParams: [String: String],
+        body: (any Encodable)? = nil
+    ) -> URLRequest {
+        guard var components: URLComponents = URLComponents(string: baseURL) else {
+            precondition(
+                false,
+                "Invalid base URL '\(baseURL)' - this indicates an unexpected error in the SDK."
+            )
+        }
+
+        components.path = path
+
+        if !queryParams.isEmpty {
+            components.queryItems = queryParams.map { key, value in
+                URLQueryItem(name: key, value: value)
+            }
+        }
+
+        guard let url = components.url else {
+            precondition(
+                false,
+                "Failed to construct URL from components - this indicates an unexpected error in the SDK."
+            )
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+
+        request.setValue(contentType.rawValue, forHTTPHeaderField: "Content-Type")
+
+        for (key, value) in additionalHeaders {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
+        if let body = body {
+            do {
+                request.httpBody = try jsonEncoder.encode(body)
+            } catch {
+                precondition(
+                    false,
+                    "Failed to encode request body: \(error) - this indicates a bug in Fern's code generation"
+                )
+            }
+        }
+
+        return request
+    }
+
     func performRequest<T: Decodable>(
         path: String,
         method: HTTPMethod,
