@@ -56,8 +56,8 @@ func loginUser() async {
     do {
         print("Making API request...")
         let sessionToken = try await client.user.loginUser(
-            username: "johndoe",
-            password: "secret123"
+            username: "user1",
+            password: "12345"
         )
         print("✅ User successfully logged in!")
         print("Session token: \(sessionToken)")

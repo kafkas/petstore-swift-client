@@ -54,6 +54,27 @@ struct HTTPClient {
         }
     }
 
+    func performStringRequest(
+        path: String,
+        method: HTTPMethod,
+        body: (any Encodable)? = nil
+    ) async throws -> String {
+        let data = try await executeRequest(path: path, method: method, body: body)
+        
+        guard let string = String(data: data, encoding: .utf8) else {
+            throw PetstoreError.decodingError(
+                DecodingError.dataCorrupted(
+                    DecodingError.Context(
+                        codingPath: [],
+                        debugDescription: "Could not convert response data to UTF-8 string"
+                    )
+                )
+            )
+        }
+        
+        return string
+    }
+
     private func executeRequest(
         path: String,
         method: HTTPMethod,
