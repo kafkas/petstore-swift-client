@@ -16,7 +16,7 @@ struct HTTPClient {
         body: (any Encodable)? = nil,
         responseType: T.Type
     ) async throws -> T {
-        let (data, contentType) = try await executeRequestWithContentType(
+        let (data, contentType) = try await executeRequest(
             path: path, method: method, body: body)
 
         if T.self == String.self {
@@ -51,14 +51,12 @@ struct HTTPClient {
         path: String,
         method: HTTPMethod,
         fileData: Data,
-        contentType: String = "application/octet-stream",
         responseType: T.Type
     ) async throws -> T {
         let data = try await executeFileUploadRequest(
             path: path,
             method: method,
-            fileData: fileData,
-            contentType: contentType
+            fileData: fileData
         )
 
         do {
@@ -72,26 +70,17 @@ struct HTTPClient {
         path: String,
         method: HTTPMethod,
         body: (any Encodable)? = nil
-    ) async throws -> Data {
-        let (data, _) = try await executeRequestWithContentType(
-            path: path, method: method, body: body)
-        return data
-    }
-
-    private func executeRequestWithContentType(
-        path: String,
-        method: HTTPMethod,
-        body: (any Encodable)? = nil
     ) async throws -> (Data, String?) {
         guard let url = URL(string: "\(baseURL)\(path)") else {
             throw PetstoreError.invalidURL
         }
 
         var request = URLRequest(url: url)
+        let contentType = "application/json"
         request.httpMethod = method.rawValue
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
         if let body = body {
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             do {
                 request.httpBody = try jsonEncoder.encode(body)
             } catch {
@@ -123,14 +112,14 @@ struct HTTPClient {
     private func executeFileUploadRequest(
         path: String,
         method: HTTPMethod,
-        fileData: Data,
-        contentType: String
+        fileData: Data
     ) async throws -> Data {
         guard let url = URL(string: "\(baseURL)\(path)") else {
             throw PetstoreError.invalidURL
         }
 
         var request = URLRequest(url: url)
+        let contentType = "application/octet-stream"
         request.httpMethod = method.rawValue
         request.setValue(contentType, forHTTPHeaderField: "Content-Type")
         request.httpBody = fileData

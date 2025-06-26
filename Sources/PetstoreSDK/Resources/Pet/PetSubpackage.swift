@@ -48,7 +48,6 @@ public struct PetSubpackage: Sendable {
             path: path,
             method: .post,
             fileData: fileData,
-            contentType: "application/octet-stream",
             responseType: ApiResponse.self
         )
     }
