@@ -1,8 +1,8 @@
 public struct StoreSubpackage: Sendable {
     private let httpClient: HTTPClient
 
-    public init(baseURL: String) {
-        self.httpClient = HTTPClient(baseURL: baseURL)
+    public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
+        self.httpClient = HTTPClient(baseURL: baseURL, authConfig: authConfig)
     }
 
     public func getInventory() async throws -> [String: Int] {

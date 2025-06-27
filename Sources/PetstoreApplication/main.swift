@@ -1,7 +1,10 @@
 import Foundation
 import PetstoreSDK
 
-let client = PetstoreClient(baseURL: "http://localhost:8080")
+let client = PetstoreClient(
+    baseURL: "http://localhost:8080",
+    authConfig: NoAuth()
+)
 
 Task {
     // Pet methods

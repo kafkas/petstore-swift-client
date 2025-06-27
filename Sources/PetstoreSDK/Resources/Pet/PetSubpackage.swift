@@ -3,8 +3,8 @@ import Foundation
 public struct PetSubpackage: Sendable {
     private let httpClient: HTTPClient
 
-    public init(baseURL: String) {
-        self.httpClient = HTTPClient(baseURL: baseURL)
+    public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
+        self.httpClient = HTTPClient(baseURL: baseURL, authConfig: authConfig)
     }
 
     public func updatePet(_ requestBody: Pet) async throws -> Pet {
