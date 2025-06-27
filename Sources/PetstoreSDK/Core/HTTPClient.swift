@@ -158,7 +158,8 @@ struct HTTPClient {
         _ request: URLRequest
     ) async throws -> (Data, String?) {
         do {
-            print("Executing request: \(request)")
+            print("Executing request: \(request)") // For debugging
+
             let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {

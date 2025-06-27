@@ -32,6 +32,44 @@ public struct PetSubpackage: Sendable {
         )
     }
 
+    public func findPetsByStatus(_ queryParams: FindPetsByStatus.QueryParams) async throws -> [Pet]
+    {
+        return try await httpClient.performJSONRequest(
+            method: .get,
+            path: "/pet/findByStatus",
+            queryParams: queryParams.toDictionary(),
+            responseType: [Pet].self
+        )
+    }
+
+    public func findPetsByTags(_ queryParams: FindPetsByTags.QueryParams) async throws -> [Pet] {
+        return try await httpClient.performJSONRequest(
+            method: .get,
+            path: "/pet/findByTags",
+            queryParams: queryParams.toDictionary(),
+            responseType: [Pet].self
+        )
+    }
+
+    public func getPetById(petId: Int64) async throws -> Pet {
+        return try await httpClient.performJSONRequest(
+            method: .get,
+            path: "/pet/\(petId)",
+            responseType: Pet.self
+        )
+    }
+
+    public func updatePetWithForm(petId: Int64, _ queryParams: UpdatePetWithForm.QueryParams)
+        async throws -> Pet
+    {
+        return try await httpClient.performJSONRequest(
+            method: .post,
+            path: "/pet/\(petId)",
+            queryParams: queryParams.toDictionary(),
+            responseType: Pet.self
+        )
+    }
+
     public func uploadFile(
         petId: Int64,
         _ requestBody: Data,

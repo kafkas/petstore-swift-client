@@ -14,6 +14,28 @@ public struct FindPetsByStatus {
     }
 }
 
+public struct FindPetsByTags {
+    public struct QueryParams: Sendable, QueryParameterConvertible {
+        public let tags: [String]?
+        
+        public init(tags: [String]? = nil) {
+            self.tags = tags
+        }
+    }
+}
+
+public struct UpdatePetWithForm {
+    public struct QueryParams: Sendable, QueryParameterConvertible {
+        public let name: String?
+        public let status: String?
+        
+        public init(name: String? = nil, status: String? = nil) {
+            self.name = name
+            self.status = status
+        }
+    }
+}
+
 public struct UploadFile {
     public struct QueryParams: Sendable, QueryParameterConvertible {
         public let additionalMetadata: String?

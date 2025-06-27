@@ -53,6 +53,85 @@ func updatePet() async {
     }
 }
 
+func findPetsByStatus() async {
+    print("Finding pets by status...")
+    do {
+        print("Making API request...")
+        let pets = try await client.pet.findPetsByStatus(
+            FindPetsByStatus.QueryParams(status: "available")
+        )
+        print("✅ Pets successfully found!")
+        print("Found \(pets.count) available pets")
+        for pet in pets.prefix(3) {
+            print("Pet: \(pet.name) - Status: \(pet.status?.rawValue ?? "unknown")")
+        }
+    } catch {
+        print("❌ Failed to find pets: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}
+
+func findPetsByTags() async {
+    print("Finding pets by tags...")
+    do {
+        print("Making API request...")
+        let pets = try await client.pet.findPetsByTags(
+            FindPetsByTags.QueryParams(tags: ["friendly", "cute"])
+        )
+        print("✅ Pets successfully found!")
+        print("Found \(pets.count) pets with specified tags")
+        for pet in pets.prefix(3) {
+            print(
+                "Pet: \(pet.name) - Tags: \(pet.tags?.map { $0.name ?? "no name" }.joined(separator: ", ") ?? "no tags")"
+            )
+        }
+    } catch {
+        print("❌ Failed to find pets: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}
+
+func getPetById() async {
+    print("Getting pet by ID...")
+    do {
+        print("Making API request...")
+        let pet = try await client.pet.getPetById(petId: Int64(fido.id!))
+        print("✅ Pet successfully retrieved!")
+        print("Pet ID: \(pet.id ?? 0)")
+        print("Pet Name: \(pet.name)")
+        print("Pet Status: \(pet.status?.rawValue ?? "unknown")")
+    } catch {
+        print("❌ Failed to get pet: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}
+
+func updatePetWithForm() async {
+    print("Updating pet with form data...")
+    do {
+        print("Making API request...")
+        let updatedPet = try await client.pet.updatePetWithForm(
+            petId: Int64(fido.id!),
+            .init(name: "Super Fido", status: "available")
+        )
+        print("✅ Pet successfully updated with form!")
+        print("Pet ID: \(updatedPet.id ?? 0)")
+        print("Pet Name: \(updatedPet.name)")
+        print("Pet Status: \(updatedPet.status?.rawValue ?? "unknown")")
+    } catch {
+        print("❌ Failed to update pet with form: \(error.localizedDescription)")
+        if let petstoreError = error as? PetstoreError {
+            print("Error type: \(petstoreError)")
+        }
+    }
+}
+
 func deletePet() async {
     print("Deleting pet...")
     do {
@@ -79,7 +158,7 @@ func uploadFile() async {
         let response = try await client.pet.uploadFile(
             petId: Int64(fido.id!),
             sampleImageData,
-            .init(additionalMetadata: "profile picture for Fido")
+            .init(additionalMetadata: "Profile picture for Fido")
         )
         print("✅ File successfully uploaded!")
         print("Response code: \(response.code ?? 0)")

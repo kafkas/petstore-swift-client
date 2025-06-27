@@ -29,4 +29,11 @@ public struct StoreSubpackage: Sendable {
             responseType: Order.self
         )
     }
+    
+    public func deleteOrder(orderId: Int64) async throws {
+        return try await httpClient.performJSONRequest(
+            method: .delete,
+            path: "/store/order/\(orderId)"
+        )
+    }
 }

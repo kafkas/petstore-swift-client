@@ -6,7 +6,11 @@ let client = PetstoreClient(baseURL: "http://localhost:8080")
 Task {
     // Pet methods
     await addPet()
+    await findPetsByStatus()
+    await findPetsByTags()
+    await getPetById()
     await updatePet()
+    await updatePetWithForm()
     await deletePet()
     await uploadFile()
 
@@ -14,6 +18,7 @@ Task {
     await getInventory()
     await placeOrder()
     await getOrderById()
+    await deleteOrder()
 
     // User methods
     await createUser()
