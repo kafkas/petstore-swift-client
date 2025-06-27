@@ -12,7 +12,7 @@ struct HTTPClient {
         self.authConfig = authConfig
     }
 
-    func performJSONRequest<T: Decodable>(
+    func performRequest<T: Decodable>(
         method: HTTP.Method,
         path: String,
         additionalHeaders: [String: String] = [:],
@@ -53,7 +53,7 @@ struct HTTPClient {
         }
     }
 
-    func performJSONRequest(
+    func performRequest(
         method: HTTP.Method,
         path: String,
         additionalHeaders: [String: String] = [:],
@@ -73,7 +73,7 @@ struct HTTPClient {
         _ = try await executeRequestWithURLSession(request)
     }
 
-    func performBinaryRequest<T: Decodable>(
+    func performFileUpload<T: Decodable>(
         method: HTTP.Method,
         path: String,
         additionalHeaders: [String: String] = [:],

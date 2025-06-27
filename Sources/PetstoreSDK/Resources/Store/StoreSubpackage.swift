@@ -6,7 +6,7 @@ public struct StoreSubpackage: Sendable {
     }
 
     public func getInventory() async throws -> [String: Int] {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .get,
             path: "/store/inventory",
             responseType: [String: Int].self
@@ -14,7 +14,7 @@ public struct StoreSubpackage: Sendable {
     }
 
     public func placeOrder(_ requestBody: Order) async throws -> Order {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .post,
             path: "/store/order",
             body: requestBody,
@@ -23,7 +23,7 @@ public struct StoreSubpackage: Sendable {
     }
 
     public func getOrderById(orderId: Int64) async throws -> Order {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .get,
             path: "/store/order/\(orderId)",
             responseType: Order.self
@@ -31,7 +31,7 @@ public struct StoreSubpackage: Sendable {
     }
     
     public func deleteOrder(orderId: Int64) async throws {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .delete,
             path: "/store/order/\(orderId)"
         )

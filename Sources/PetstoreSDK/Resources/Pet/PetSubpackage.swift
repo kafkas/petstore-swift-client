@@ -8,7 +8,7 @@ public struct PetSubpackage: Sendable {
     }
 
     public func updatePet(_ requestBody: Pet) async throws -> Pet {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .put,
             path: "/pet",
             body: requestBody,
@@ -17,7 +17,7 @@ public struct PetSubpackage: Sendable {
     }
 
     public func addPet(_ requestBody: Pet) async throws -> Pet {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .post,
             path: "/pet",
             body: requestBody,
@@ -26,7 +26,7 @@ public struct PetSubpackage: Sendable {
     }
 
     public func deletePet(petId: Int) async throws {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .delete,
             path: "/pet/\(petId)"
         )
@@ -34,7 +34,7 @@ public struct PetSubpackage: Sendable {
 
     public func findPetsByStatus(_ queryParams: FindPetsByStatus.QueryParams) async throws -> [Pet]
     {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .get,
             path: "/pet/findByStatus",
             queryParams: queryParams.toDictionary(),
@@ -43,7 +43,7 @@ public struct PetSubpackage: Sendable {
     }
 
     public func findPetsByTags(_ queryParams: FindPetsByTags.QueryParams) async throws -> [Pet] {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .get,
             path: "/pet/findByTags",
             queryParams: queryParams.toDictionary(),
@@ -52,7 +52,7 @@ public struct PetSubpackage: Sendable {
     }
 
     public func getPetById(petId: Int64) async throws -> Pet {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .get,
             path: "/pet/\(petId)",
             responseType: Pet.self
@@ -62,7 +62,7 @@ public struct PetSubpackage: Sendable {
     public func updatePetWithForm(petId: Int64, _ queryParams: UpdatePetWithForm.QueryParams)
         async throws -> Pet
     {
-        return try await httpClient.performJSONRequest(
+        return try await httpClient.performRequest(
             method: .post,
             path: "/pet/\(petId)",
             queryParams: queryParams.toDictionary(),
@@ -75,7 +75,7 @@ public struct PetSubpackage: Sendable {
         _ requestBody: Data,
         _ queryParams: UploadFile.QueryParams
     ) async throws -> ApiResponse {
-        return try await httpClient.performBinaryRequest(
+        return try await httpClient.performFileUpload(
             method: .post,
             path: "/pet/\(petId)/uploadImage",
             queryParams: queryParams.toDictionary(),
