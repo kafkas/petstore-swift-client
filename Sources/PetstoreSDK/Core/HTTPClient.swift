@@ -106,17 +106,13 @@ struct HTTPClient {
         queryParams: [String: String],
         body: HTTP.RequestBody? = nil
     ) -> URLRequest {
-        guard var components: URLComponents = URLComponents(string: baseURL) else {
+        let fullUrl = "\(baseURL)\(path)"
+        guard var components: URLComponents = URLComponents(string: fullUrl) else {
             precondition(
                 false,
                 "Invalid base URL '\(baseURL)' - this indicates an unexpected error in the SDK."
             )
         }
-
-        // Properly append the path to the existing base path
-        let basePath = components.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        let requestPath = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        components.path = "/\(basePath)/\(requestPath)"
 
         if !queryParams.isEmpty {
             components.queryItems = queryParams.map { key, value in
