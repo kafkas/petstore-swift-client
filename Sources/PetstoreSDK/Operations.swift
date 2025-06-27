@@ -1,12 +1,12 @@
 import Foundation
 
-public struct FindPetsByStatus {
-    public struct QueryParams: Sendable, QueryParameterConvertible {
-        public let status: String?
-        public let limit: Int?
-        public let offset: Int?
+struct FindPetsByStatus {
+    struct QueryParams: Sendable, QueryParameterConvertible {
+        let status: String?
+        let limit: Int?
+        let offset: Int?
 
-        public init(status: String? = nil, limit: Int? = nil, offset: Int? = nil) {
+        init(status: String? = nil, limit: Int? = nil, offset: Int? = nil) {
             self.status = status
             self.limit = limit
             self.offset = offset
@@ -14,44 +14,44 @@ public struct FindPetsByStatus {
     }
 }
 
-public struct FindPetsByTags {
-    public struct QueryParams: Sendable, QueryParameterConvertible {
-        public let tags: [String]?
-        
-        public init(tags: [String]? = nil) {
+struct FindPetsByTags {
+    struct QueryParams: Sendable, QueryParameterConvertible {
+        let tags: [String]?
+
+        init(tags: [String]? = nil) {
             self.tags = tags
         }
     }
 }
 
-public struct UpdatePetWithForm {
-    public struct QueryParams: Sendable, QueryParameterConvertible {
-        public let name: String?
-        public let status: String?
-        
-        public init(name: String? = nil, status: String? = nil) {
+struct UpdatePetWithForm {
+    struct QueryParams: Sendable, QueryParameterConvertible {
+        let name: String?
+        let status: String?
+
+        init(name: String? = nil, status: String? = nil) {
             self.name = name
             self.status = status
         }
     }
 }
 
-public struct UploadFile {
-    public struct QueryParams: Sendable, QueryParameterConvertible {
-        public let additionalMetadata: String?
+struct UploadFile {
+    struct QueryParams: Sendable, QueryParameterConvertible {
+        let additionalMetadata: String?
 
-        public init(additionalMetadata: String? = nil) {
+        init(additionalMetadata: String? = nil) {
             self.additionalMetadata = additionalMetadata
         }
     }
 }
 
-public struct LoginUser {
-    public struct QueryParams: Sendable, QueryParameterConvertible {
-        public let username: String?
-        public let password: String?
+struct LoginUser {
+    struct QueryParams: Sendable, QueryParameterConvertible {
+        let username: String?
+        let password: String?
 
-        public init(username: String? = nil, password: String? = nil) {
+        init(username: String? = nil, password: String? = nil) {
             self.username = username
             self.password = password
         }

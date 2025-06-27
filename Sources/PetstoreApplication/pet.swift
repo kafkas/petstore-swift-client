@@ -57,9 +57,7 @@ func findPetsByStatus() async {
     print("Finding pets by status...")
     do {
         print("Making API request...")
-        let pets = try await client.pet.findPetsByStatus(
-            .init(status: "available")
-        )
+        let pets = try await client.pet.findPetsByStatus(status: "available")
         print("✅ Pets successfully found!")
         print("Found \(pets.count) available pets")
         for pet in pets.prefix(3) {
@@ -77,9 +75,7 @@ func findPetsByTags() async {
     print("Finding pets by tags...")
     do {
         print("Making API request...")
-        let pets = try await client.pet.findPetsByTags(
-            .init(tags: ["friendly", "cute"])
-        )
+        let pets = try await client.pet.findPetsByTags(tags: ["friendly", "cute"])
         print("✅ Pets successfully found!")
         print("Found \(pets.count) pets with specified tags")
         for pet in pets.prefix(3) {
@@ -118,7 +114,8 @@ func updatePetWithForm() async {
         print("Making API request...")
         let updatedPet = try await client.pet.updatePetWithForm(
             petId: Int64(fido.id!),
-            .init(name: "Super Fido", status: "available")
+            name: "Super Fido",
+            status: "available"
         )
         print("✅ Pet successfully updated with form!")
         print("Pet ID: \(updatedPet.id ?? 0)")
@@ -158,7 +155,7 @@ func uploadFile() async {
         let response = try await client.pet.uploadFile(
             petId: Int64(fido.id!),
             sampleImageData,
-            .init(additionalMetadata: "Profile picture for Fido")
+            additionalMetadata: "Profile picture for Fido"
         )
         print("✅ File successfully uploaded!")
         print("Response code: \(response.code ?? 0)")

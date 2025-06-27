@@ -7,25 +7,29 @@ public struct UserSubpackage: Sendable {
         self.httpClient = HTTPClient(baseURL: baseURL, authConfig: authConfig)
     }
 
-    public func createUser(_ requestBody: User) async throws -> User {
+    public func createUser(_ data: User) async throws -> User {
         return try await httpClient.performRequest(
             method: .post,
             path: "/user",
-            body: requestBody,
+            body: data,
             responseType: User.self
         )
     }
 
-    public func createUsersWithListInput(_ requestBody: [User]) async throws -> User {
+    public func createUsersWithListInput(_ data: [User]) async throws -> User {
         return try await httpClient.performRequest(
             method: .post,
             path: "/user/createWithList",
-            body: requestBody,
+            body: data,
             responseType: User.self
         )
     }
 
-    public func loginUser(_ queryParams: LoginUser.QueryParams) async throws -> String {
+    public func loginUser(
+        username: String? = nil,
+        password: String? = nil
+    ) async throws -> String {
+        let queryParams = LoginUser.QueryParams(username: username, password: password)
         return try await httpClient.performRequest(
             method: .get,
             path: "/user/login",
@@ -49,11 +53,11 @@ public struct UserSubpackage: Sendable {
         )
     }
 
-    public func updateUser(username: String, _ requestBody: User) async throws {
+    public func updateUser(username: String, _ data: User) async throws {
         return try await httpClient.performRequest(
             method: .put,
             path: "/user/\(username)",
-            body: requestBody
+            body: data
         )
     }
 
