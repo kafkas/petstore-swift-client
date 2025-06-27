@@ -8,18 +8,18 @@ public struct UserSubpackage: Sendable {
     }
 
     public func createUser(user: User) async throws -> User {
-        return try await httpClient.performRequest(
-            path: "/user",
+        return try await httpClient.performJSONRequest(
             method: .post,
+            path: "/user",
             body: user,
             responseType: User.self
         )
     }
 
     public func createUsersWithListInput(users: [User]) async throws -> User {
-        return try await httpClient.performRequest(
-            path: "/user/createWithList",
+        return try await httpClient.performJSONRequest(
             method: .post,
+            path: "/user/createWithList",
             body: users,
             responseType: User.self
         )
@@ -41,26 +41,26 @@ public struct UserSubpackage: Sendable {
             path += "?" + queryParams.joined(separator: "&")
         }
 
-        return try await httpClient.performRequest(
-            path: path,
+        return try await httpClient.performJSONRequest(
             method: .get,
+            path: path,
             responseType: String.self
         )
     }
 
     public func logoutUser() async throws {
-        try await httpClient.performVoidRequest(
-            path: "/user/logout",
-            method: .get
+        try await httpClient.performJSONRequest(
+            method: .get,
+            path: "/user/logout"
         )
     }
 
     public func getUserByName(username: String) async throws -> User {
         let encodedUsername =
             username.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? username
-        return try await httpClient.performRequest(
-            path: "/user/\(encodedUsername)",
+        return try await httpClient.performJSONRequest(
             method: .get,
+            path: "/user/\(encodedUsername)",
             responseType: User.self
         )
     }
@@ -68,9 +68,9 @@ public struct UserSubpackage: Sendable {
     public func updateUser(username: String, user: User) async throws {
         let encodedUsername =
             username.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? username
-        try await httpClient.performVoidRequest(
-            path: "/user/\(encodedUsername)",
+        try await httpClient.performJSONRequest(
             method: .put,
+            path: "/user/\(encodedUsername)",
             body: user
         )
     }
@@ -78,9 +78,9 @@ public struct UserSubpackage: Sendable {
     public func deleteUser(username: String) async throws {
         let encodedUsername =
             username.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? username
-        try await httpClient.performVoidRequest(
-            path: "/user/\(encodedUsername)",
+        try await httpClient.performJSONRequest(
             method: .delete,
+            path: "/user/\(encodedUsername)"
         )
     }
 }

@@ -6,26 +6,26 @@ public struct StoreSubpackage: Sendable {
     }
 
     public func getInventory() async throws -> [String: Int] {
-        return try await httpClient.performRequest(
-            path: "/store/inventory",
+        return try await httpClient.performJSONRequest(
             method: .get,
+            path: "/store/inventory",
             responseType: [String: Int].self
         )
     }
 
     public func placeOrder(order: Order) async throws -> Order {
-        return try await httpClient.performRequest(
-            path: "/store/order",
+        return try await httpClient.performJSONRequest(
             method: .post,
+            path: "/store/order",
             body: order,
             responseType: Order.self
         )
     }
 
     public func getOrderById(orderId: Int64) async throws -> Order {
-        return try await httpClient.performRequest(
-            path: "/store/order/\(orderId)",
+        return try await httpClient.performJSONRequest(
             method: .get,
+            path: "/store/order/\(orderId)",
             responseType: Order.self
         )
     }

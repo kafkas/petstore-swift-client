@@ -10,13 +10,99 @@ struct HTTPClient {
         self.baseURL = baseURL
     }
 
-    func buildRequest(
-        method: HTTPMethod,
-        contentType: MIMEType,
+    func performJSONRequest<T: Decodable>(
+        method: HTTP.Method,
+        path: String,
+        additionalHeaders: [String: String] = [:],
+        queryParams: [String: String] = [:],
+        body: (any Encodable)? = nil,
+        responseType: T.Type
+    ) async throws -> T {
+        let requestBody: HTTP.RequestBody? = body.map { .encodable($0) }
+
+        let request = buildRequest(
+            method: method,
+            contentType: .applicationJson,
+            additionalHeaders: additionalHeaders,
+            path: path,
+            queryParams: queryParams,
+            body: requestBody
+        )
+
+        let (data, contentType) = try await executeRequestWithURLSession(request)
+
+        if T.self == String.self {
+            do {
+                return try jsonDecoder.decode(responseType, from: data)
+            } catch {
+                if contentType?.lowercased().contains("text") == true,
+                    let string = String(data: data, encoding: .utf8) as? T
+                {
+                    return string
+                }
+                throw PetstoreError.decodingError(error)
+            }
+        }
+
+        do {
+            return try jsonDecoder.decode(responseType, from: data)
+        } catch {
+            throw PetstoreError.decodingError(error)
+        }
+    }
+
+    func performJSONRequest(
+        method: HTTP.Method,
+        path: String,
+        additionalHeaders: [String: String] = [:],
+        queryParams: [String: String] = [:],
+        body: (any Encodable)? = nil
+    ) async throws {
+        let requestBody: HTTP.RequestBody? = body.map { .encodable($0) }
+
+        let request = buildRequest(
+            method: method,
+            contentType: .applicationJson,
+            additionalHeaders: additionalHeaders,
+            path: path,
+            queryParams: queryParams,
+            body: requestBody
+        )
+        _ = try await executeRequestWithURLSession(request)
+    }
+
+    func performBinaryRequest<T: Decodable>(
+        method: HTTP.Method,
+        path: String,
+        additionalHeaders: [String: String] = [:],
+        queryParams: [String: String] = [:],
+        fileData: Data,
+        responseType: T.Type
+    ) async throws -> T {
+        let request = buildRequest(
+            method: method,
+            contentType: .applicationOctetStream,
+            additionalHeaders: additionalHeaders,
+            path: path,
+            queryParams: queryParams,
+            body: .data(fileData)
+        )
+        let (data, _) = try await executeRequestWithURLSession(request)
+
+        do {
+            return try jsonDecoder.decode(responseType, from: data)
+        } catch {
+            throw PetstoreError.decodingError(error)
+        }
+    }
+
+    private func buildRequest(
+        method: HTTP.Method,
+        contentType: HTTP.ContentType,
         additionalHeaders: [String: String],
         path: String,
         queryParams: [String: String],
-        body: (any Encodable)? = nil
+        body: HTTP.RequestBody? = nil
     ) -> URLRequest {
         guard var components: URLComponents = URLComponents(string: baseURL) else {
             precondition(
@@ -50,98 +136,29 @@ struct HTTPClient {
         }
 
         if let body = body {
-            do {
-                request.httpBody = try jsonEncoder.encode(body)
-            } catch {
-                precondition(
-                    false,
-                    "Failed to encode request body: \(error) - this indicates a bug in Fern's code generation"
-                )
+            switch body {
+            case .encodable(let encodableBody):
+                do {
+                    request.httpBody = try jsonEncoder.encode(encodableBody)
+                } catch {
+                    precondition(
+                        false,
+                        "Failed to encode request body: \(error) - this indicates an unexpected error in the SDK."
+                    )
+                }
+            case .data(let dataBody):
+                request.httpBody = dataBody
             }
         }
 
         return request
     }
 
-    func performRequest<T: Decodable>(
-        path: String,
-        method: HTTPMethod,
-        body: (any Encodable)? = nil,
-        responseType: T.Type
-    ) async throws -> T {
-        let (data, contentType) = try await executeRequest(
-            path: path, method: method, body: body)
-
-        if T.self == String.self {
-            do {
-                return try jsonDecoder.decode(responseType, from: data)
-            } catch {
-                if contentType?.lowercased().contains("text") == true,
-                    let string = String(data: data, encoding: .utf8) as? T
-                {
-                    return string
-                }
-                throw PetstoreError.decodingError(error)
-            }
-        }
-
-        do {
-            return try jsonDecoder.decode(responseType, from: data)
-        } catch {
-            throw PetstoreError.decodingError(error)
-        }
-    }
-
-    func performVoidRequest(
-        path: String,
-        method: HTTPMethod,
-        body: (any Encodable)? = nil
-    ) async throws {
-        _ = try await executeRequest(path: path, method: method, body: body)
-    }
-
-    func performFileUploadRequest<T: Decodable>(
-        path: String,
-        method: HTTPMethod,
-        fileData: Data,
-        responseType: T.Type
-    ) async throws -> T {
-        let data = try await executeFileUploadRequest(
-            path: path,
-            method: method,
-            fileData: fileData
-        )
-
-        do {
-            return try jsonDecoder.decode(responseType, from: data)
-        } catch {
-            throw PetstoreError.decodingError(error)
-        }
-    }
-
-    private func executeRequest(
-        path: String,
-        method: HTTPMethod,
-        body: (any Encodable)? = nil
+    private func executeRequestWithURLSession(
+        _ request: URLRequest
     ) async throws -> (Data, String?) {
-        guard let url = URL(string: "\(baseURL)\(path)") else {
-            throw PetstoreError.invalidURL
-        }
-
-        var request = URLRequest(url: url)
-        let contentType = "application/json"
-        request.httpMethod = method.rawValue
-        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-
-        if let body = body {
-            do {
-                request.httpBody = try jsonEncoder.encode(body)
-            } catch {
-                throw PetstoreError.encodingError(error)
-            }
-        }
-
         do {
+            print("Executing request: \(request)")
             let (data, response) = try await session.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -152,41 +169,6 @@ struct HTTPClient {
 
             let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type")
             return (data, contentType)
-
-        } catch {
-            if error is PetstoreError {
-                throw error
-            } else {
-                throw PetstoreError.networkError(error)
-            }
-        }
-    }
-
-    private func executeFileUploadRequest(
-        path: String,
-        method: HTTPMethod,
-        fileData: Data
-    ) async throws -> Data {
-        guard let url = URL(string: "\(baseURL)\(path)") else {
-            throw PetstoreError.invalidURL
-        }
-
-        var request = URLRequest(url: url)
-        let contentType = "application/octet-stream"
-        request.httpMethod = method.rawValue
-        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-        request.httpBody = fileData
-
-        do {
-            let (data, response) = try await session.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw PetstoreError.invalidResponse
-            }
-
-            try handleResponseStatus(httpResponse.statusCode)
-
-            return data
 
         } catch {
             if error is PetstoreError {

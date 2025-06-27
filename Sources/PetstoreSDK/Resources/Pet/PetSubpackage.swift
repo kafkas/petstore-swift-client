@@ -8,27 +8,27 @@ public struct PetSubpackage: Sendable {
     }
 
     public func updatePet(pet: Pet) async throws -> Pet {
-        return try await httpClient.performRequest(
-            path: "/pet",
+        return try await httpClient.performJSONRequest(
             method: .put,
+            path: "/pet",
             body: pet,
             responseType: Pet.self
         )
     }
 
     public func addPet(pet: Pet) async throws -> Pet {
-        return try await httpClient.performRequest(
-            path: "/pet",
+        return try await httpClient.performJSONRequest(
             method: .post,
+            path: "/pet",
             body: pet,
             responseType: Pet.self
         )
     }
 
     public func deletePet(id: Int) async throws {
-        try await httpClient.performVoidRequest(
-            path: "/pet/\(id)",
-            method: .delete
+        try await httpClient.performJSONRequest(
+            method: .delete,
+            path: "/pet/\(id)"
         )
     }
 
@@ -37,18 +37,18 @@ public struct PetSubpackage: Sendable {
         fileData: Data,
         additionalMetadata: String? = nil
     ) async throws -> ApiResponse {
-        var path = "/pet/\(petId)/uploadImage"
+        let path = "/pet/\(petId)/uploadImage"
 
-        if let metadata = additionalMetadata,
-            let encodedMetadata = metadata.addingPercentEncoding(
-                withAllowedCharacters: .urlQueryAllowed)
-        {
-            path += "?additionalMetadata=\(encodedMetadata)"
+        var queryParams: [String: String] = [:]
+
+        if let metadata = additionalMetadata {
+            queryParams["additionalMetadata"] = metadata
         }
 
-        return try await httpClient.performFileUploadRequest(
-            path: path,
+        return try await httpClient.performBinaryRequest(
             method: .post,
+            path: path,
+            queryParams: queryParams,
             fileData: fileData,
             responseType: ApiResponse.self
         )
