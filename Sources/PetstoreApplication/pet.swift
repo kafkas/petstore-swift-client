@@ -58,7 +58,7 @@ func findPetsByStatus() async {
     do {
         print("Making API request...")
         let pets = try await client.pet.findPetsByStatus(
-            FindPetsByStatus.QueryParams(status: "available")
+            .init(status: "available")
         )
         print("✅ Pets successfully found!")
         print("Found \(pets.count) available pets")
@@ -78,7 +78,7 @@ func findPetsByTags() async {
     do {
         print("Making API request...")
         let pets = try await client.pet.findPetsByTags(
-            FindPetsByTags.QueryParams(tags: ["friendly", "cute"])
+            .init(tags: ["friendly", "cute"])
         )
         print("✅ Pets successfully found!")
         print("Found \(pets.count) pets with specified tags")

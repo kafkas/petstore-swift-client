@@ -8,10 +8,10 @@ extension QueryParameterConvertible {
     public func toDictionary() -> [String: String] {
         let mirror = Mirror(reflecting: self)
         var dict: [String: String] = [:]
-        
+
         for child in mirror.children {
             guard let propertyName = child.label else { continue }
-            
+
             switch child.value {
             case let optionalValue as (any OptionalType):
                 if let unwrappedValue = optionalValue.wrappedValue {
@@ -28,7 +28,7 @@ extension QueryParameterConvertible {
                 dict[propertyName] = String(describing: value)
             }
         }
-        
+
         return dict
     }
 }
