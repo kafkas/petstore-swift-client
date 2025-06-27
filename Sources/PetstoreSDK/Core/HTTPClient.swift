@@ -158,7 +158,7 @@ struct HTTPClient {
         _ request: URLRequest
     ) async throws -> (Data, String?) {
         do {
-            print("Executing request: \(request)") // For debugging
+            print("Executing request: \(request)")  // For debugging
 
             let (data, response) = try await session.data(for: request)
 
@@ -166,8 +166,19 @@ struct HTTPClient {
                 throw PetstoreError.invalidResponse
             }
 
-            try handleResponseStatus(httpResponse.statusCode)
+            // Handle successful responses
+            if 200...299 ~= httpResponse.statusCode {
+                let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type")
+                return (data, contentType)
+            }
 
+            // Handle error responses
+            try handleErrorResponse(
+                statusCode: httpResponse.statusCode,
+                data: data
+            )
+
+            // This should never be reached, but satisfy the compiler
             let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type")
             return (data, contentType)
 
@@ -180,18 +191,45 @@ struct HTTPClient {
         }
     }
 
-    private func handleResponseStatus(_ statusCode: Int) throws {
+    private func handleErrorResponse(statusCode: Int, data: Data) throws {
+        let errorResponse = parseErrorResponse(statusCode: statusCode, from: data)
+
         switch statusCode {
-        case 200...299:
-            return
         case 400:
-            throw PetstoreError.invalidInput
+            throw PetstoreError.badRequest(errorResponse)
+        case 401:
+            throw PetstoreError.unauthorized(errorResponse)
+        case 403:
+            throw PetstoreError.forbidden(errorResponse)
         case 404:
-            throw PetstoreError.petNotFound
+            throw PetstoreError.notFound(errorResponse)
         case 422:
-            throw PetstoreError.validationException
+            throw PetstoreError.validationError(errorResponse)
+        case 500...599:
+            throw PetstoreError.serverError(errorResponse)
         default:
-            throw PetstoreError.httpError(statusCode)
+            throw PetstoreError.httpError(statusCode: statusCode, response: errorResponse)
         }
+    }
+
+    private func parseErrorResponse(statusCode: Int, from data: Data) -> APIErrorResponse? {
+        // Try to parse as JSON error response first
+        if let errorResponse = try? jsonDecoder.decode(APIErrorResponse.self, from: data) {
+            return errorResponse
+        }
+
+        // Try to parse as simple JSON with message field
+        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let message = json["message"] as? String
+        {
+            return APIErrorResponse(code: statusCode, message: message)
+        }
+
+        // Try to parse as plain text
+        if let errorMessage = String(data: data, encoding: .utf8), !errorMessage.isEmpty {
+            return APIErrorResponse(code: statusCode, message: errorMessage)
+        }
+
+        return nil
     }
 }
