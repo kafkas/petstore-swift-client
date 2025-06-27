@@ -26,11 +26,9 @@ public struct UserSubpackage: Sendable {
     }
 
     public func loginUser(_ queryParams: LoginUser.QueryParams) async throws -> String {
-        let path = "/user/login"
-
         return try await httpClient.performJSONRequest(
             method: .get,
-            path: path,
+            path: "/user/login",
             queryParams: queryParams.toDictionary(),
             responseType: String.self
         )

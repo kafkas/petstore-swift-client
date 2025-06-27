@@ -37,11 +37,9 @@ public struct PetSubpackage: Sendable {
         _ requestBody: Data,
         _ queryParams: UploadFile.QueryParams
     ) async throws -> ApiResponse {
-        let path = "/pet/\(petId)/uploadImage"
-
         return try await httpClient.performBinaryRequest(
             method: .post,
-            path: path,
+            path: "/pet/\(petId)/uploadImage",
             queryParams: queryParams.toDictionary(),
             fileData: requestBody,
             responseType: ApiResponse.self
