@@ -113,7 +113,10 @@ struct HTTPClient {
             )
         }
 
-        components.path = path
+        // Properly append the path to the existing base path
+        let basePath = components.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        let requestPath = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        components.path = "/\(basePath)/\(requestPath)"
 
         if !queryParams.isEmpty {
             components.queryItems = queryParams.map { key, value in
