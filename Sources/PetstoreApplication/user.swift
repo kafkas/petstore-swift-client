@@ -16,7 +16,7 @@ func createUser() async {
     print("Creating user...")
     do {
         print("Making API request...")
-        let createdUser = try await client.user.createUser(user: sampleUser)
+        let createdUser = try await client.user.createUser(sampleUser)
         print("✅ User successfully created!")
         print("User ID: \(createdUser.id ?? 0)")
         print("Username: \(createdUser.username ?? "unknown")")
@@ -40,7 +40,7 @@ func createUsersWithListInput() async {
             User(
                 username: "bobsmith", firstName: "Bob", lastName: "Smith", email: "bob@example.com"),
         ]
-        let result = try await client.user.createUsersWithListInput(users: users)
+        let result = try await client.user.createUsersWithListInput(users)
         print("✅ Users successfully created!")
         print("Result user: \(result.username ?? "unknown")")
     } catch {
@@ -56,8 +56,7 @@ func loginUser() async {
     do {
         print("Making API request...")
         let sessionToken = try await client.user.loginUser(
-            username: "user1",
-            password: "12345"
+            .init(username: "user1", password: "12345")
         )
         print("✅ User successfully logged in!")
         print("Session token: \(sessionToken)")
@@ -116,7 +115,7 @@ func updateUser() async {
             phone: sampleUser.phone,
             userStatus: 2
         )
-        try await client.user.updateUser(username: "johndoe", user: updatedUser)
+        try await client.user.updateUser(username: "johndoe", updatedUser)
         print("✅ User successfully updated!")
     } catch {
         print("❌ Failed to update user: \(error.localizedDescription)")

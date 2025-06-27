@@ -14,7 +14,7 @@ func addPet() async {
 
     do {
         print("Making API request...")
-        let createdPet = try await client.pet.addPet(pet: fido)
+        let createdPet = try await client.pet.addPet(fido)
         print("✅ Pet successfully added!")
         print("Pet ID: \(createdPet.id ?? 0)")
         print("Pet Name: \(createdPet.name)")
@@ -39,7 +39,7 @@ func updatePet() async {
 
     do {
         print("Making API request...")
-        let updatedPet = try await client.pet.updatePet(pet: newPet)
+        let updatedPet = try await client.pet.updatePet(newPet)
         print("✅ Pet successfully updated!")
         print("Pet ID: \(updatedPet.id ?? 0)")
         print("Pet Name: \(updatedPet.name)")
@@ -57,7 +57,7 @@ func deletePet() async {
     print("Deleting pet...")
     do {
         print("Making API request...")
-        try await client.pet.deletePet(id: fido.id!)
+        try await client.pet.deletePet(petId: fido.id!)
         print("✅ Pet successfully deleted!")
 
     } catch {
@@ -78,8 +78,8 @@ func uploadFile() async {
         print("Making API request...")
         let response = try await client.pet.uploadFile(
             petId: Int64(fido.id!),
-            fileData: sampleImageData,
-            additionalMetadata: "Profile picture for Fido"
+            sampleImageData,
+            .init(additionalMetadata: "profile picture for Fido")
         )
         print("✅ File successfully uploaded!")
         print("Response code: \(response.code ?? 0)")

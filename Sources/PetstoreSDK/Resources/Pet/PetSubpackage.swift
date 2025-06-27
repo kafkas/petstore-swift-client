@@ -7,49 +7,43 @@ public struct PetSubpackage: Sendable {
         self.httpClient = HTTPClient(baseURL: baseURL)
     }
 
-    public func updatePet(pet: Pet) async throws -> Pet {
+    public func updatePet(_ requestBody: Pet) async throws -> Pet {
         return try await httpClient.performJSONRequest(
             method: .put,
             path: "/pet",
-            body: pet,
+            body: requestBody,
             responseType: Pet.self
         )
     }
 
-    public func addPet(pet: Pet) async throws -> Pet {
+    public func addPet(_ requestBody: Pet) async throws -> Pet {
         return try await httpClient.performJSONRequest(
             method: .post,
             path: "/pet",
-            body: pet,
+            body: requestBody,
             responseType: Pet.self
         )
     }
 
-    public func deletePet(id: Int) async throws {
-        try await httpClient.performJSONRequest(
+    public func deletePet(petId: Int) async throws {
+        return try await httpClient.performJSONRequest(
             method: .delete,
-            path: "/pet/\(id)"
+            path: "/pet/\(petId)"
         )
     }
 
     public func uploadFile(
         petId: Int64,
-        fileData: Data,
-        additionalMetadata: String? = nil
+        _ requestBody: Data,
+        _ queryParams: UploadFile.QueryParams
     ) async throws -> ApiResponse {
         let path = "/pet/\(petId)/uploadImage"
-
-        var queryParams: [String: String] = [:]
-
-        if let metadata = additionalMetadata {
-            queryParams["additionalMetadata"] = metadata
-        }
 
         return try await httpClient.performBinaryRequest(
             method: .post,
             path: path,
-            queryParams: queryParams,
-            fileData: fileData,
+            queryParams: queryParams.toDictionary(),
+            fileData: requestBody,
             responseType: ApiResponse.self
         )
     }

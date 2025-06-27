@@ -29,7 +29,7 @@ func placeOrder() async {
             status: .placed,
             complete: true
         )
-        let placedOrder = try await client.store.placeOrder(order: order)
+        let placedOrder = try await client.store.placeOrder(order)
         print("✅ Order successfully placed!")
         print(placedOrder)
     } catch {

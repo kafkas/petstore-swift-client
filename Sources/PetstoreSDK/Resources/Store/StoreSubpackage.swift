@@ -13,11 +13,11 @@ public struct StoreSubpackage: Sendable {
         )
     }
 
-    public func placeOrder(order: Order) async throws -> Order {
+    public func placeOrder(_ requestBody: Order) async throws -> Order {
         return try await httpClient.performJSONRequest(
             method: .post,
             path: "/store/order",
-            body: order,
+            body: requestBody,
             responseType: Order.self
         )
     }
