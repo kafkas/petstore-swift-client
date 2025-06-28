@@ -24,12 +24,12 @@ Corollary 2: We need to devise a parameter naming strategy that handles conflict
 - **`useAsyncAwait`** (boolean, default: `true`)  
   Whether to use async/await in the generated SDK. Requires Swift 5.5+. When disabled, falls back to completion handler-based APIs.
 
-- **`fieldNamingStrategy`** (string, default: `"camelcase"`)  
+- **`fieldNamingStrategy`** (`"camel-case"` | `"snake-case"` | `"preserve"` , default: `"camel-case"`)  
   Controls how field names are transformed from the OpenAPI spec:
 
-  - `"camelcase"`: Converts to camelCase (e.g., `user_name` → `userName`)
-  - `"snakecase"`: Preserves snake_case naming
-  - `"nochange"`: Uses field names exactly as defined in the spec
+  - `"camel-case"`: Converts to camelCase (e.g., `user_name` → `userName`)
+  - `"snake-case"`: Converts to snake_case (e.g., `userName` → `user_name`)
+  - `"preserve"`: Uses field names as close to the original as possible while ensuring valid Swift identifiers (e.g., `user-name` → `userName`, `user_name` → `user_name`)
 
 - **`protocolConformanceForStructs`** (object)  
   Controls which protocols generated structs should conform to:
@@ -52,22 +52,25 @@ Corollary 2: We need to devise a parameter naming strategy that handles conflict
     CaseIterable: true # default: false
   ```
 
-- **`labelPathParameters`** (boolean, default: `true`)  
-  Whether to include argument labels for path parameters in method signatures.
+- **`pathParameterLabelNamingStrategy`** (`"infer-camel-case"` | `"infer-snake-case"` | `"none"` , default: `"infer-camel-case"`)
+  Controls argument labels for path parameters in method signatures:
 
-  - `true`: `getPet(petId: 123)`
-  - `false`: `getPet(123)`
+  - `"infer-camel-case"`: Use parameter names from the OpenAPI spec (e.g., `"pet_id"` → `getPet(petId: 123)`)
+  - `"infer-snake-case"`: Use parameter names from the OpenAPI spec (e.g., `"petId"` → `getPet(pet_id: 123)`)
+  - `"none"`: No argument labels (e.g., `getPet(123)`)
 
-- **`labelQueryParameters`** (boolean, default: `true`)  
-  Whether to include argument labels for query parameters in method signatures.
+- **`queryParameterLabelNamingStrategy`** (`"infer-camel-case"` | `"infer-snake-case"` | `"none"` , default: `"infer-camel-case"`)
+  Controls argument labels for query parameters in method signatures:
 
-  - `true`: `findPets(status: .available, tags: ["dog"])`
-  - `false`: `findPets(.available, ["dog"])`
+  - `"infer-camel-case"`: Use parameter names from the OpenAPI spec (e.g., `"pet_id"` → `getPet(petId: 123)`)
+  - `"infer-snake-case"`: Use parameter names from the OpenAPI spec (e.g., `"petId"` → `getPet(pet_id: 123)`)
+  - `"none"`: No argument labels (e.g., `getPet(123)`)
 
-- **`labelRequestBodyParameters`** (boolean, default: `false`)  
-  Whether to include argument labels for request body parameters in method signatures.
-  - `true`: `createPet(pet: newPet)`
-  - `false`: `createPet(newPet)`
+- **`requestBodyParameterLabel`** (string, default: `undefined`)  
+  Controls argument labels for request body parameters in method signatures:
+
+  - `undefined`: No argument labels (e.g., `createPet(newPet)`)
+  - Custom string: e.g. `"body"` → `createPet(body: newPet)`
 
 ## TODOS
 
