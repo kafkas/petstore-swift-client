@@ -21,20 +21,53 @@ Corollary 2: We need to devise a parameter naming strategy that handles conflict
 
 ## Planned Generator Config
 
-- `useAsyncAwait` (bool): Whether to use async/await in the generated. Compatible with Swift 5.5+
-- `protocolConformanceForStructs`: {
-  Hashable: (bool) defaults to true,
-  Sendable: (bool) defaults to true
-  }
-- `protocolConformanceForEnums`: {
-  Hashable: (bool) defaults to true,
-  Sendable: (bool) defaults to true,
-  CaseIterable: (bool)
-  }
-- `fieldNamingStrategy` ("camelcase", "snakecase", "nochange")
-- `labelPathParameters` (bool) defaults to true
-- `labelQueryParameters` (bool): defaults to true
-- `labelRequestBodyParameters` (bool): defaults to false
+- **`useAsyncAwait`** (boolean, default: `true`)  
+  Whether to use async/await in the generated SDK. Requires Swift 5.5+. When disabled, falls back to completion handler-based APIs.
+
+- **`fieldNamingStrategy`** (string, default: `"camelcase"`)  
+  Controls how field names are transformed from the OpenAPI spec:
+
+  - `"camelcase"`: Converts to camelCase (e.g., `user_name` → `userName`)
+  - `"snakecase"`: Preserves snake_case naming
+  - `"nochange"`: Uses field names exactly as defined in the spec
+
+- **`protocolConformanceForStructs`** (object)  
+  Controls which protocols generated structs should conform to:
+
+  ```yaml
+  protocolConformanceForStructs:
+    Codable: true # required and cannot be changed
+    Hashable: true # default: true
+    Sendable: true # default: true
+  ```
+
+- **`protocolConformanceForEnums`** (object)  
+  Controls which protocols generated enums should conform to:
+
+  ```yaml
+  protocolConformanceForEnums:
+    Codable: true # required and cannot be changed
+    Hashable: true # default: true
+    Sendable: true # default: true
+    CaseIterable: true # default: false
+  ```
+
+- **`labelPathParameters`** (boolean, default: `true`)  
+  Whether to include argument labels for path parameters in method signatures.
+
+  - `true`: `getPet(petId: 123)`
+  - `false`: `getPet(123)`
+
+- **`labelQueryParameters`** (boolean, default: `true`)  
+  Whether to include argument labels for query parameters in method signatures.
+
+  - `true`: `findPets(status: .available, tags: ["dog"])`
+  - `false`: `findPets(.available, ["dog"])`
+
+- **`labelRequestBodyParameters`** (boolean, default: `false`)  
+  Whether to include argument labels for request body parameters in method signatures.
+  - `true`: `createPet(pet: newPet)`
+  - `false`: `createPet(newPet)`
 
 ## TODOS
 
