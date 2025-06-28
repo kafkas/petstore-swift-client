@@ -8,7 +8,7 @@ public struct Order: Codable, Hashable, Sendable {
     public let status: Status?
     public let complete: Bool?
 
-    public enum Status: String, Codable, CaseIterable, Sendable {
+    public enum Status: String, Codable, Hashable, CaseIterable, Sendable {
         case placed = "placed"
         case approved = "approved"
         case delivered = "delivered"
