@@ -2,8 +2,7 @@ import Foundation
 import Petstore
 
 let client = PetstoreClient(
-    baseURL: "https://petstore3.swagger.io/api/v3"
-        // baseURL: "http://localhost:8080"
+    baseURL: "http://localhost:8080"
 )
 
 Task {

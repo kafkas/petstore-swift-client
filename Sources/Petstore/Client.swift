@@ -18,9 +18,23 @@ public struct PetstoreClient: Sendable {
     public let store: StoreClient
     public let user: UserClient
 
-    public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
+    public init(
+        baseURL: String? = nil,
+        environment: PetstoreEnvironment = .default,
+        authConfig: AuthConfiguration = NoAuth()
+    ) {
+        let baseURL = getBaseURL(baseURL: baseURL, environment: environment)
+
         self.pet = PetClient(baseURL: baseURL, authConfig: authConfig)
         self.store = StoreClient(baseURL: baseURL, authConfig: authConfig)
         self.user = UserClient(baseURL: baseURL, authConfig: authConfig)
     }
+
+}
+
+private func getBaseURL(baseURL: String?, environment: PetstoreEnvironment) -> String {
+    if let baseURL = baseURL {
+        return baseURL
+    }
+    return environment.rawValue
 }
