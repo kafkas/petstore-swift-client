@@ -1,5 +1,5 @@
 import Foundation
-import PetstoreSDK
+import Petstore
 
 let sampleUser = User(
     id: 123,

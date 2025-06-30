@@ -14,8 +14,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "PetstoreSDK",
-            targets: ["PetstoreSDK"]),
+            name: "Petstore",
+            targets: ["Petstore"]),
         .executable(
             name: "PetstoreApplication",
             targets: ["PetstoreApplication"]),
@@ -23,11 +23,11 @@ let package = Package(
     targets: [
         // SDK Library Target
         .target(
-            name: "PetstoreSDK",
+            name: "Petstore",
             dependencies: []),
         // Client Executable Target
         .executableTarget(
             name: "PetstoreApplication",
-            dependencies: ["PetstoreSDK"]),
+            dependencies: ["Petstore"]),
     ]
 )

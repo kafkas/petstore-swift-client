@@ -1,4 +1,4 @@
-import PetstoreSDK
+import Petstore
 
 let fido = Pet(
     id: 1,

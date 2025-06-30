@@ -1,5 +1,5 @@
 import Foundation
-import PetstoreSDK
+import Petstore
 
 let sampleOrder = Order(
     id: 1,

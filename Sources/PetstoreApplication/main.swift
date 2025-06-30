@@ -1,5 +1,5 @@
 import Foundation
-import PetstoreSDK
+import Petstore
 
 let client = PetstoreClient(
     baseURL: "https://petstore3.swagger.io/api/v3"
