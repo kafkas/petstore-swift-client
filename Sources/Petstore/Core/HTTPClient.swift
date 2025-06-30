@@ -2,14 +2,12 @@ import Foundation
 
 struct HTTPClient {
     let baseURL: String
-    private let authConfig: AuthConfiguration
     private let session = URLSession.shared
     private let jsonEncoder = Serde.jsonEncoder
     private let jsonDecoder = Serde.jsonDecoder
 
-    init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
+    init(baseURL: String) {
         self.baseURL = baseURL
-        self.authConfig = authConfig
     }
 
     func performRequest<T: Decodable>(
@@ -132,11 +130,7 @@ struct HTTPClient {
 
         request.setValue(contentType.rawValue, forHTTPHeaderField: "Content-Type")
 
-        // Add authentication headers
-        let authHeaders = authConfig.authHeaders()
-        for (key, value) in authHeaders {
-            request.setValue(value, forHTTPHeaderField: key)
-        }
+        // TODO: Add API key and bearer token
 
         // Add additional headers (these can override auth headers if needed)
         for (key, value) in additionalHeaders {

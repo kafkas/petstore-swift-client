@@ -2,8 +2,8 @@
 public struct StoreClient: Sendable {
     private let httpClient: HTTPClient
 
-    public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
-        self.httpClient = HTTPClient(baseURL: baseURL, authConfig: authConfig)
+    public init(baseURL: String, apiKey: String) {
+        self.httpClient = HTTPClient(baseURL: baseURL)
     }
 
     /// Returns pet inventories by status.

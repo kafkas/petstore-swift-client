@@ -21,13 +21,13 @@ public struct PetstoreClient: Sendable {
     public init(
         baseURL: String? = nil,
         environment: PetstoreEnvironment = .default,
-        authConfig: AuthConfiguration = NoAuth()
+        apiKey: String
     ) {
         let baseURL = getBaseURL(baseURL: baseURL, environment: environment)
 
-        self.pet = PetClient(baseURL: baseURL, authConfig: authConfig)
-        self.store = StoreClient(baseURL: baseURL, authConfig: authConfig)
-        self.user = UserClient(baseURL: baseURL, authConfig: authConfig)
+        self.pet = PetClient(baseURL: baseURL, apiKey: apiKey)
+        self.store = StoreClient(baseURL: baseURL, apiKey: apiKey)
+        self.user = UserClient(baseURL: baseURL, apiKey: apiKey)
     }
 
 }

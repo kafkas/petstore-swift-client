@@ -4,12 +4,12 @@ import Foundation
 public struct UserClient: Sendable {
     private let httpClient: HTTPClient
 
-    public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
-        self.httpClient = HTTPClient(baseURL: baseURL, authConfig: authConfig)
+    public init(baseURL: String, apiKey: String) {
+        self.httpClient = HTTPClient(baseURL: baseURL)
     }
 
     /// Create user.
-    /// 
+    ///
     /// This can only be done by the logged in user.
     public func createUser(_ data: User) async throws -> User {
         return try await httpClient.performRequest(
@@ -21,7 +21,7 @@ public struct UserClient: Sendable {
     }
 
     /// Creates list of users with given input array.
-    /// 
+    ///
     /// Creates list of users with given input array.
     public func createUsersWithListInput(_ data: [User]) async throws -> User {
         return try await httpClient.performRequest(
@@ -33,7 +33,7 @@ public struct UserClient: Sendable {
     }
 
     /// Logs user into the system.
-    /// 
+    ///
     /// Log into the system.
     /// - Parameters:
     ///   - username: The user name for login
@@ -52,7 +52,7 @@ public struct UserClient: Sendable {
     }
 
     /// Logs out current logged in user session.
-    /// 
+    ///
     /// Log user out of the system.
     public func logoutUser() async throws {
         return try await httpClient.performRequest(
@@ -62,7 +62,7 @@ public struct UserClient: Sendable {
     }
 
     /// Get user by user name.
-    /// 
+    ///
     /// Get user detail based on username.
     /// - Parameter username: The name that needs to be fetched. Use user1 for testing
     public func getUserByName(username: String) async throws -> User {
@@ -74,7 +74,7 @@ public struct UserClient: Sendable {
     }
 
     /// Update user resource.
-    /// 
+    ///
     /// This can only be done by the logged in user.
     /// - Parameters:
     ///   - username: name that need to be deleted
@@ -88,7 +88,7 @@ public struct UserClient: Sendable {
     }
 
     /// Delete user resource.
-    /// 
+    ///
     /// This can only be done by the logged in user.
     /// - Parameter username: The name that needs to be deleted
     public func deleteUser(username: String) async throws {
