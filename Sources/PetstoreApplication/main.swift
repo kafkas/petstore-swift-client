@@ -3,7 +3,7 @@ import Petstore
 
 let client = PetstoreClient(
     baseURL: "http://localhost:8080",
-    apiKey: "abc123"
+    apiKey: "abc123",
 )
 
 Task {

@@ -1,13 +1,20 @@
 import Foundation
 
-struct HTTPClient {
-    let baseURL: String
-    private let session = URLSession.shared
+struct HTTPClient: Sendable {
+    private let config: ClientConfig
     private let jsonEncoder = Serde.jsonEncoder
     private let jsonDecoder = Serde.jsonDecoder
 
-    init(baseURL: String) {
-        self.baseURL = baseURL
+    init(config: ClientConfig) {
+        self.config = config
+    }
+
+    private var baseURL: String {
+        config.baseURL
+    }
+
+    private var urlSession: URLSession {
+        config.urlSession
     }
 
     func performRequest<T: Decodable>(
@@ -130,7 +137,19 @@ struct HTTPClient {
 
         request.setValue(contentType.rawValue, forHTTPHeaderField: "Content-Type")
 
-        // TODO: Add API key and bearer token
+        if let apiKey = config.apiKey {
+            request.setValue(apiKey, forHTTPHeaderField: "api_key")
+        }
+
+        if let token = config.token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        if let baseHeaders = config.headers {
+            for (key, value) in baseHeaders {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
+        }
 
         // Add additional headers (these can override auth headers if needed)
         for (key, value) in additionalHeaders {
@@ -162,7 +181,7 @@ struct HTTPClient {
         do {
             print("Executing request: \(request)")  // For debugging
 
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await urlSession.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw PetstoreError.invalidResponse

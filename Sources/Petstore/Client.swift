@@ -1,3 +1,5 @@
+import Foundation
+
 /// Use this class to access the different functions within the SDK. You can instantiate any number of clients with different configuration that will propagate to these functions.
 ///
 /// - Parameters:
@@ -10,7 +12,7 @@
 ///
 /// let client = PetstoreClient(
 ///     baseURL: "https://petstore3.swagger.io/api/v3",
-///     authConfig: ApiKeyAuth(apiKey: "YOUR_API_KEY")
+///     apiKey: "YOUR_API_KEY"
 /// )
 /// ```
 public struct PetstoreClient: Sendable {
@@ -21,20 +23,24 @@ public struct PetstoreClient: Sendable {
     public init(
         baseURL: String? = nil,
         environment: PetstoreEnvironment = .default,
-        apiKey: String
+        apiKey: String,
+        token: String? = nil,
+        timeout: Int? = nil,
+        headers: [String: String] = [:],
+        urlSession: URLSession? = nil
     ) {
-        let baseURL = getBaseURL(baseURL: baseURL, environment: environment)
-
-        self.pet = PetClient(baseURL: baseURL, apiKey: apiKey)
-        self.store = StoreClient(baseURL: baseURL, apiKey: apiKey)
-        self.user = UserClient(baseURL: baseURL, apiKey: apiKey)
+        let config = ClientConfig(
+            baseURL: baseURL,
+            environment: environment,
+            apiKey: apiKey,
+            token: token,
+            timeout: timeout,
+            headers: headers,
+            urlSession: urlSession
+        )
+        self.pet = PetClient(config: config)
+        self.store = StoreClient(config: config)
+        self.user = UserClient(config: config)
     }
 
-}
-
-private func getBaseURL(baseURL: String?, environment: PetstoreEnvironment) -> String {
-    if let baseURL = baseURL {
-        return baseURL
-    }
-    return environment.rawValue
 }

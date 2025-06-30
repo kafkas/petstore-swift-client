@@ -4,8 +4,8 @@ import Foundation
 public struct UserClient: Sendable {
     private let httpClient: HTTPClient
 
-    public init(baseURL: String, apiKey: String) {
-        self.httpClient = HTTPClient(baseURL: baseURL)
+    public init(config: ClientConfig) {
+        self.httpClient = HTTPClient(config: config)
     }
 
     /// Create user.

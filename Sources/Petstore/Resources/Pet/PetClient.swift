@@ -4,12 +4,12 @@ import Foundation
 public struct PetClient: Sendable {
     private let httpClient: HTTPClient
 
-    public init(baseURL: String, apiKey: String) {
-        self.httpClient = HTTPClient(baseURL: baseURL)
+    public init(config: ClientConfig) {
+        self.httpClient = HTTPClient(config: config)
     }
 
     /// Update an existing pet.
-    /// 
+    ///
     /// Update an existing pet by Id.
     public func updatePet(_ data: Pet) async throws -> Pet {
         return try await httpClient.performRequest(
@@ -21,7 +21,7 @@ public struct PetClient: Sendable {
     }
 
     /// Add a new pet to the store.
-    /// 
+    ///
     /// Add a new pet to the store.
     public func addPet(_ data: Pet) async throws -> Pet {
         return try await httpClient.performRequest(
@@ -33,7 +33,7 @@ public struct PetClient: Sendable {
     }
 
     /// Deletes a pet.
-    /// 
+    ///
     /// Delete a pet.
     /// - Parameter petId: Pet id to delete
     public func deletePet(petId: Int) async throws {
@@ -44,7 +44,7 @@ public struct PetClient: Sendable {
     }
 
     /// Finds Pets by status.
-    /// 
+    ///
     /// Multiple status values can be provided with comma separated strings.
     /// - Parameters:
     ///   - status: Status values that need to be considered for filter
@@ -69,7 +69,7 @@ public struct PetClient: Sendable {
     }
 
     /// Finds Pets by tags.
-    /// 
+    ///
     /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
     /// - Parameter tags: Tags to filter by
     public func findPetsByTags(tags: [String]? = nil) async throws -> [Pet] {
@@ -83,7 +83,7 @@ public struct PetClient: Sendable {
     }
 
     /// Find pet by ID.
-    /// 
+    ///
     /// Returns a single pet.
     /// - Parameter petId: ID of pet to return
     public func getPetById(petId: Int64) async throws -> Pet {
@@ -95,7 +95,7 @@ public struct PetClient: Sendable {
     }
 
     /// Updates a pet in the store with form data.
-    /// 
+    ///
     /// Updates a pet resource based on the form data.
     /// - Parameters:
     ///   - petId: ID of pet that needs to be updated
@@ -116,11 +116,11 @@ public struct PetClient: Sendable {
     }
 
     /// Uploads an image.
-    /// 
+    ///
     /// Upload image of the pet.
     /// - Parameters:
     ///   - petId: ID of pet to update
-    ///   - fileData: The image file data to upload  
+    ///   - fileData: The image file data to upload
     ///   - additionalMetadata: Additional Metadata
     public func uploadFile(
         petId: Int64,
