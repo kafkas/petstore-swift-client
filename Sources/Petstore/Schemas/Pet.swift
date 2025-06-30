@@ -4,8 +4,10 @@ public struct Pet: Codable, Hashable, Sendable {
     public let category: Category?
     public let photoUrls: [String]
     public let tags: [Tag]?
+    /// pet status in the store
     public let status: Status?
 
+    /// pet status in the store
     public enum Status: String, Codable, Hashable, Sendable, CaseIterable {
         case available = "available"
         case pending = "pending"

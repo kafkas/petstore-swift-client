@@ -5,9 +5,11 @@ public struct Order: Codable, Hashable, Sendable {
     public let petId: Int64?
     public let quantity: Int32?
     public let shipDate: Date?
+    /// Order Status
     public let status: Status?
     public let complete: Bool?
 
+    /// Order Status
     public enum Status: String, Codable, Hashable, CaseIterable, Sendable {
         case placed = "placed"
         case approved = "approved"

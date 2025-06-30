@@ -2,6 +2,7 @@ import Foundation
 
 struct FindPetsByStatus {
     struct QueryParams: Sendable, QueryParameterConvertible {
+        /// Status values that need to be considered for filter
         let status: String?
         let limit: Int?
         let offset: Int?
@@ -16,6 +17,7 @@ struct FindPetsByStatus {
 
 struct FindPetsByTags {
     struct QueryParams: Sendable, QueryParameterConvertible {
+        /// Tags to filter by
         let tags: [String]?
 
         init(tags: [String]? = nil) {
@@ -26,7 +28,9 @@ struct FindPetsByTags {
 
 struct UpdatePetWithForm {
     struct QueryParams: Sendable, QueryParameterConvertible {
+        /// Name of pet that needs to be updated
         let name: String?
+        /// Status of pet that needs to be updated
         let status: String?
 
         init(name: String? = nil, status: String? = nil) {
@@ -38,6 +42,7 @@ struct UpdatePetWithForm {
 
 struct UploadFile {
     struct QueryParams: Sendable, QueryParameterConvertible {
+        /// Additional Metadata
         let additionalMetadata: String?
 
         init(additionalMetadata: String? = nil) {
@@ -48,7 +53,9 @@ struct UploadFile {
 
 struct LoginUser {
     struct QueryParams: Sendable, QueryParameterConvertible {
+        /// The user name for login
         let username: String?
+        /// The password for login in clear text
         let password: String?
 
         init(username: String? = nil, password: String? = nil) {

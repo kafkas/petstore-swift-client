@@ -8,6 +8,7 @@ public struct User: Codable, Hashable, Sendable {
     public let email: String?
     public let password: String?
     public let phone: String?
+    /// User Status
     public let userStatus: Int32?
 
     public init(

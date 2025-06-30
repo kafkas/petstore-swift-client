@@ -1,5 +1,6 @@
 import Foundation
 
+/// Everything about your Pets
 public struct PetClient: Sendable {
     private let httpClient: HTTPClient
 
@@ -7,6 +8,9 @@ public struct PetClient: Sendable {
         self.httpClient = HTTPClient(baseURL: baseURL, authConfig: authConfig)
     }
 
+    /// Update an existing pet.
+    /// 
+    /// Update an existing pet by Id.
     public func updatePet(_ data: Pet) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .put,
@@ -16,6 +20,9 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Add a new pet to the store.
+    /// 
+    /// Add a new pet to the store.
     public func addPet(_ data: Pet) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .post,
@@ -25,6 +32,10 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Deletes a pet.
+    /// 
+    /// Delete a pet.
+    /// - Parameter petId: Pet id to delete
     public func deletePet(petId: Int) async throws {
         return try await httpClient.performRequest(
             method: .delete,
@@ -32,6 +43,13 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Finds Pets by status.
+    /// 
+    /// Multiple status values can be provided with comma separated strings.
+    /// - Parameters:
+    ///   - status: Status values that need to be considered for filter
+    ///   - limit: Maximum number of pets to return
+    ///   - offset: Number of pets to skip
     public func findPetsByStatus(
         status: String? = nil,
         limit: Int? = nil,
@@ -50,6 +68,10 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Finds Pets by tags.
+    /// 
+    /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
+    /// - Parameter tags: Tags to filter by
     public func findPetsByTags(tags: [String]? = nil) async throws -> [Pet] {
         let queryParams = FindPetsByTags.QueryParams(tags: tags)
         return try await httpClient.performRequest(
@@ -60,6 +82,10 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Find pet by ID.
+    /// 
+    /// Returns a single pet.
+    /// - Parameter petId: ID of pet to return
     public func getPetById(petId: Int64) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .get,
@@ -68,6 +94,13 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Updates a pet in the store with form data.
+    /// 
+    /// Updates a pet resource based on the form data.
+    /// - Parameters:
+    ///   - petId: ID of pet that needs to be updated
+    ///   - name: Name of pet that needs to be updated
+    ///   - status: Status of pet that needs to be updated
     public func updatePetWithForm(
         petId: Int64,
         name: String? = nil,
@@ -82,6 +115,13 @@ public struct PetClient: Sendable {
         )
     }
 
+    /// Uploads an image.
+    /// 
+    /// Upload image of the pet.
+    /// - Parameters:
+    ///   - petId: ID of pet to update
+    ///   - fileData: The image file data to upload  
+    ///   - additionalMetadata: Additional Metadata
     public func uploadFile(
         petId: Int64,
         _ fileData: Data,
