@@ -1,4 +1,4 @@
-public struct StoreSubpackage: Sendable {
+public struct StoreClient: Sendable {
     private let httpClient: HTTPClient
 
     public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {

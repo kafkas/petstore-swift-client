@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UserSubpackage: Sendable {
+public struct UserClient: Sendable {
     private let httpClient: HTTPClient
 
     public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
