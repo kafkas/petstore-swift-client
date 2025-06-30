@@ -11,19 +11,40 @@ From project root, run `swift run` to run the main program (`PetstoreApplication
 
 ## Design Principles
 
-**Principle**: _Treat whether an API parameter is in the body, query or path as an implementation detail._
+### Principle 1
 
-**Corollary 1**: SDK interface doesn't reference terms like "query parameters" or "request body"
+_Treat whether an API parameter is in the body, query or path as an implementation detail._
 
-**Corollary 2**: We need to devise a parameter naming strategy that handles conflicts, edge cases like same names for path and query params
+**Corollary 1.1**: SDK interface doesn't reference terms like "query parameters" or "request body"
+
+**Corollary 1.2**: We need to devise a parameter naming strategy that handles conflicts, edge cases like same names for path and query params
+
+### Principle 2
+
+_SDK interface should look good by default with minimal configuration._
+
+**Corollary 2.1**: Sensible defaults should be chosen for all generator configuration options to produce clean, idiomatic Swift code
+
+**Corollary 2.2**: Common use cases should work well without requiring custom configuration
+
+### Principle 3
+
+_SDK should gracefully handle server responses that don't match the OpenAPI spec._
+
+**Corollary 3.1**: Decoding should not fail when server returns unexpected values; instead use fallback values or mark fields as unavailable.
+
+**Corollary 3.2**: Runtime errors may still occur when application code accesses fields that weren't properly decoded, but this is preferable to immediate decode failures
 
 ## Planned Generator Config
 
-- **`clientName`** (string):  
+- **`clientName`** (string, default: inferred from the spec):  
   The name of the main client struct/class that serves as the entry point to the SDK and contains all resource clients (e.g., `PetClient`, `StoreClient`, `UserClient`).
 
 - **`useAsyncAwait`** (_boolean_, default: `true`)  
   Whether to use async/await in the generated SDK. Requires Swift 5.5+. When disabled, falls back to completion handler-based APIs. Can skip for v1.
+
+- **`skipResponseValidation`** (_boolean_, default: `true`)
+  Effectively disables decoding errors. Needs investigation.
 
 - **`protocolConformanceForStructs`** (_object_)  
   Controls which protocols generated structs should conform to:
