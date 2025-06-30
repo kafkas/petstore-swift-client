@@ -19,6 +19,9 @@ From project root, run `swift run` to run the main program (`PetstoreApplication
 
 ## Planned Generator Config
 
+- **`clientName`** (string):  
+  The name of the main client struct/class that serves as the entry point to the SDK and contains all resource clients (e.g., `PetClient`, `StoreClient`, `UserClient`).
+
 - **`useAsyncAwait`** (_boolean_, default: `true`)  
   Whether to use async/await in the generated SDK. Requires Swift 5.5+. When disabled, falls back to completion handler-based APIs. Can skip for v1.
 
