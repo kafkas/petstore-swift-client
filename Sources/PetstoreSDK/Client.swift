@@ -1,11 +1,11 @@
 public struct PetstoreClient: Sendable {
-    public let pet: PetSubpackage
-    public let store: StoreSubpackage
-    public let user: UserSubpackage
+    public let pet: PetClient
+    public let store: StoreClient
+    public let user: UserClient
 
     public init(baseURL: String, authConfig: AuthConfiguration = NoAuth()) {
-        self.pet = PetSubpackage(baseURL: baseURL, authConfig: authConfig)
-        self.store = StoreSubpackage(baseURL: baseURL, authConfig: authConfig)
-        self.user = UserSubpackage(baseURL: baseURL, authConfig: authConfig)
+        self.pet = PetClient(baseURL: baseURL, authConfig: authConfig)
+        self.store = StoreClient(baseURL: baseURL, authConfig: authConfig)
+        self.user = UserClient(baseURL: baseURL, authConfig: authConfig)
     }
 }
