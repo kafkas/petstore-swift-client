@@ -1,6 +1,10 @@
 import Foundation
 
 public struct ClientConfig: Sendable {
+    struct Defaults {
+        static let timeout: Int = 60
+    }
+
     let baseURL: String
     let apiKey: String?
     let token: String?
@@ -27,7 +31,7 @@ public struct ClientConfig: Sendable {
 
 private func buildURLSession(timeoutSeconds: Int?) -> URLSession {
     let configuration = URLSessionConfiguration.default
-    configuration.timeoutIntervalForRequest = .init(timeoutSeconds ?? 60)
+    configuration.timeoutIntervalForRequest = .init(timeoutSeconds ?? ClientConfig.Defaults.timeout)
     return .init(configuration: configuration)
 }
 
