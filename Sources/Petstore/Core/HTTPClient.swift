@@ -26,7 +26,8 @@ struct HTTPClient: Sendable {
             requestHeaders: requestHeaders,
             path: path,
             queryParams: queryParams,
-            body: requestBody
+            body: requestBody,
+            requestOptions: requestOptions
         )
 
         let (data, contentType) = try await executeRequestWithURLSession(request)
@@ -67,7 +68,8 @@ struct HTTPClient: Sendable {
             requestHeaders: requestHeaders,
             path: path,
             queryParams: queryParams,
-            body: requestBody
+            body: requestBody,
+            requestOptions: requestOptions
         )
         _ = try await executeRequestWithURLSession(request)
     }
@@ -87,7 +89,8 @@ struct HTTPClient: Sendable {
             requestHeaders: requestHeaders,
             path: path,
             queryParams: queryParams,
-            body: .data(fileData)
+            body: .data(fileData),
+            requestOptions: requestOptions
         )
         let (data, _) = try await executeRequestWithURLSession(request)
 

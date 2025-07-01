@@ -13,6 +13,7 @@ public struct StoreClient: Sendable {
         return try await httpClient.performRequest(
             method: .get,
             path: "/store/inventory",
+            requestOptions: requestOptions,
             responseType: [String: Int].self
         )
     }
@@ -25,6 +26,7 @@ public struct StoreClient: Sendable {
             method: .post,
             path: "/store/order",
             body: data,
+            requestOptions: requestOptions,
             responseType: Order.self
         )
     }
@@ -37,6 +39,7 @@ public struct StoreClient: Sendable {
         return try await httpClient.performRequest(
             method: .get,
             path: "/store/order/\(orderId)",
+            requestOptions: requestOptions,
             responseType: Order.self
         )
     }
@@ -48,7 +51,8 @@ public struct StoreClient: Sendable {
     public func deleteOrder(orderId: Int64, requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .delete,
-            path: "/store/order/\(orderId)"
+            path: "/store/order/\(orderId)",
+            requestOptions: requestOptions
         )
     }
 }

@@ -16,6 +16,7 @@ public struct PetClient: Sendable {
             method: .put,
             path: "/pet",
             body: data,
+            requestOptions: requestOptions,
             responseType: Pet.self
         )
     }
@@ -28,6 +29,7 @@ public struct PetClient: Sendable {
             method: .post,
             path: "/pet",
             body: data,
+            requestOptions: requestOptions,
             responseType: Pet.self
         )
     }
@@ -39,7 +41,8 @@ public struct PetClient: Sendable {
     public func deletePet(petId: Int, requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .delete,
-            path: "/pet/\(petId)"
+            path: "/pet/\(petId)",
+            requestOptions: requestOptions
         )
     }
 
@@ -65,6 +68,7 @@ public struct PetClient: Sendable {
             method: .get,
             path: "/pet/findByStatus",
             queryParams: queryParams.toDictionary(),
+            requestOptions: requestOptions,
             responseType: [Pet].self
         )
     }
@@ -73,12 +77,15 @@ public struct PetClient: Sendable {
     ///
     /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
     /// - Parameter tags: Tags to filter by
-    public func findPetsByTags(tags: [String]? = nil, requestOptions: RequestOptions? = nil) async throws -> [Pet] {
+    public func findPetsByTags(tags: [String]? = nil, requestOptions: RequestOptions? = nil)
+        async throws -> [Pet]
+    {
         let queryParams = FindPetsByTags.QueryParams(tags: tags)
         return try await httpClient.performRequest(
             method: .get,
             path: "/pet/findByTags",
             queryParams: queryParams.toDictionary(),
+            requestOptions: requestOptions,
             responseType: [Pet].self
         )
     }
@@ -87,10 +94,12 @@ public struct PetClient: Sendable {
     ///
     /// Returns a single pet.
     /// - Parameter petId: ID of pet to return
-    public func getPetById(petId: Int64, requestOptions: RequestOptions? = nil) async throws -> Pet {
+    public func getPetById(petId: Int64, requestOptions: RequestOptions? = nil) async throws -> Pet
+    {
         return try await httpClient.performRequest(
             method: .get,
             path: "/pet/\(petId)",
+            requestOptions: requestOptions,
             responseType: Pet.self
         )
     }
@@ -113,6 +122,7 @@ public struct PetClient: Sendable {
             method: .post,
             path: "/pet/\(petId)",
             queryParams: queryParams.toDictionary(),
+            requestOptions: requestOptions,
             responseType: Pet.self
         )
     }
@@ -136,6 +146,7 @@ public struct PetClient: Sendable {
             path: "/pet/\(petId)/uploadImage",
             queryParams: queryParams.toDictionary(),
             fileData: fileData,
+            requestOptions: requestOptions,
             responseType: ApiResponse.self
         )
     }

@@ -17,6 +17,7 @@ public struct UserClient: Sendable {
             method: .post,
             path: "/user",
             body: data,
+            requestOptions: requestOptions,
             responseType: User.self
         )
     }
@@ -31,6 +32,7 @@ public struct UserClient: Sendable {
             method: .post,
             path: "/user/createWithList",
             body: data,
+            requestOptions: requestOptions,
             responseType: User.self
         )
     }
@@ -51,6 +53,7 @@ public struct UserClient: Sendable {
             method: .get,
             path: "/user/login",
             queryParams: queryParams.toDictionary(),
+            requestOptions: requestOptions,
             responseType: String.self
         )
     }
@@ -61,7 +64,8 @@ public struct UserClient: Sendable {
     public func logoutUser(requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .get,
-            path: "/user/logout"
+            path: "/user/logout",
+            requestOptions: requestOptions
         )
     }
 
@@ -75,6 +79,7 @@ public struct UserClient: Sendable {
         return try await httpClient.performRequest(
             method: .get,
             path: "/user/\(username)",
+            requestOptions: requestOptions,
             responseType: User.self
         )
     }
@@ -91,7 +96,8 @@ public struct UserClient: Sendable {
         return try await httpClient.performRequest(
             method: .put,
             path: "/user/\(username)",
-            body: data
+            body: data,
+            requestOptions: requestOptions
         )
     }
 
@@ -102,7 +108,8 @@ public struct UserClient: Sendable {
     public func deleteUser(username: String, requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .delete,
-            path: "/user/\(username)"
+            path: "/user/\(username)",
+            requestOptions: requestOptions
         )
     }
 }

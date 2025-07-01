@@ -23,4 +23,22 @@ public struct RequestOptions {
     // TODO: Omit for file uploads
     /// Additional body parameters to include in the request payload. These are merged with any parameters generated from the request model.
     let additionalBodyParameters: [String: String]?
+
+    public init(
+        apiKey: String? = nil,
+        token: String? = nil,
+        timeout: Int? = nil,
+        maxRetries: Int? = nil,
+        additionalHeaders: [String: String]? = nil,
+        additionalQueryParameters: [String: String]? = nil,
+        additionalBodyParameters: [String: String]? = nil
+    ) {
+        self.apiKey = apiKey
+        self.token = token
+        self.timeout = timeout
+        self.maxRetries = maxRetries
+        self.additionalHeaders = additionalHeaders
+        self.additionalQueryParameters = additionalQueryParameters
+        self.additionalBodyParameters = additionalBodyParameters
+    }
 }

@@ -14,7 +14,7 @@ func addPet() async {
 
     do {
         print("Making API request...")
-        let createdPet = try await client.pet.addPet(fido)
+        let createdPet = try await client.pet.addPet(fido, requestOptions: .init(apiKey: "overriding_key"))
         print("✅ Pet successfully added!")
         print("Pet ID: \(createdPet.id ?? 0)")
         print("Pet Name: \(createdPet.name)")
