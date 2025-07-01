@@ -12,15 +12,14 @@ public struct ClientConfig: Sendable {
     let urlSession: URLSession
 
     init(
-        baseURL: String? = nil,
-        environment: PetstoreEnvironment,
+        baseURL: String,
         apiKey: String? = nil,
         token: String? = nil,
         timeout: Int? = nil,
         headers: [String: String]? = nil,
         urlSession: URLSession? = nil
     ) {
-        self.baseURL = getBaseURL(baseURL: baseURL, environment: environment)
+        self.baseURL = baseURL
         self.apiKey = apiKey
         self.token = token
         self.headers = headers
@@ -33,11 +32,4 @@ private func buildURLSession(timeoutSeconds: Int?) -> URLSession {
     let configuration = URLSessionConfiguration.default
     configuration.timeoutIntervalForRequest = .init(timeoutSeconds ?? ClientConfig.Defaults.timeout)
     return .init(configuration: configuration)
-}
-
-private func getBaseURL(baseURL: String?, environment: PetstoreEnvironment) -> String {
-    if let baseURL = baseURL {
-        return baseURL
-    }
-    return environment.rawValue
 }

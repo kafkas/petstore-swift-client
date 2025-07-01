@@ -35,8 +35,7 @@ public struct PetstoreClient: Sendable {
     public let user: UserClient
 
     public init(
-        baseURL: String? = nil,
-        environment: PetstoreEnvironment = .default,
+        baseURL: String = PetstoreEnvironment.default.rawValue,
         apiKey: String,
         token: String? = nil,
         timeout: Int? = nil,
@@ -45,7 +44,6 @@ public struct PetstoreClient: Sendable {
     ) {
         let config = ClientConfig(
             baseURL: baseURL,
-            environment: environment,
             apiKey: apiKey,
             token: token,
             timeout: timeout,
