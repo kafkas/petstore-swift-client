@@ -144,7 +144,7 @@ public struct PetClient: Sendable {
         return try await httpClient.performFileUpload(
             method: .post,
             path: "/pet/\(petId)/uploadImage",
-            requestQueryParams: queryParams.toDictionary(),
+            queryParams: queryParams.toDictionary(),
             fileData: fileData,
             requestOptions: requestOptions,
             responseType: ApiResponse.self

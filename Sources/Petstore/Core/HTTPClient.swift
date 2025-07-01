@@ -55,9 +55,9 @@ struct HTTPClient: Sendable {
     func performRequest(
         method: HTTP.Method,
         path: String,
-        requestHeaders: [String: String] = [:],
-        requestQueryParams: [String: String] = [:],
-        requestBody: (any Encodable)? = nil,
+        headers requestHeaders: [String: String] = [:],
+        queryParams requestQueryParams: [String: String] = [:],
+        body requestBody: (any Encodable)? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
         let requestBody: HTTP.RequestBody? = requestBody.map { .encodable($0) }
@@ -77,8 +77,8 @@ struct HTTPClient: Sendable {
     func performFileUpload<T: Decodable>(
         method: HTTP.Method,
         path: String,
-        requestHeaders: [String: String] = [:],
-        requestQueryParams: [String: String] = [:],
+        headers requestHeaders: [String: String] = [:],
+        queryParams requestQueryParams: [String: String] = [:],
         fileData: Data,
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
