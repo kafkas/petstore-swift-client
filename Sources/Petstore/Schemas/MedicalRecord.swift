@@ -4,7 +4,6 @@ public enum MedicalRecord: Codable, Hashable, Sendable {
     case vaccination(VaccinationRecord)
     case checkup(CheckupRecord)
     case surgery(SurgeryRecord)
-    case treatment(TreatmentRecord)
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -20,9 +19,6 @@ public enum MedicalRecord: Codable, Hashable, Sendable {
         case "surgery":
             let record = try SurgeryRecord.init(from: decoder)
             self = .surgery(record)
-        case "treatment":
-            let record = try TreatmentRecord.init(from: decoder)
-            self = .treatment(record)
         default:
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -40,8 +36,6 @@ public enum MedicalRecord: Codable, Hashable, Sendable {
         case .checkup(let record):
             try record.encode(to: encoder)
         case .surgery(let record):
-            try record.encode(to: encoder)
-        case .treatment(let record):
             try record.encode(to: encoder)
         }
     }
