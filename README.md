@@ -37,72 +37,11 @@ _SDK should gracefully handle server responses that don't match the OpenAPI spec
 
 ## Planned Generator Config
 
-- **`clientName`** (string, default: inferred from the spec):  
+- **`clientClassName`** (string, default: inferred from the spec):  
   The name of the main client struct/class that serves as the entry point to the SDK and contains all resource clients (e.g., `PetClient`, `StoreClient`, `UserClient`).
-
-- **`useAsyncAwait`** (_boolean_, default: `true`)  
-  Whether to use async/await in the generated SDK. Requires Swift 5.5+. When disabled, falls back to completion handler-based APIs. Can skip for v1.
 
 - **`skipResponseValidation`** (_boolean_, default: `true`)
   Effectively disables decoding errors. Needs investigation.
-
-- **`protocolConformanceForStructs`** (_object_)  
-  Controls which protocols generated structs should conform to:
-
-  ```yaml
-  protocolConformanceForStructs:
-    Codable: true # required and cannot be changed
-    Hashable: true # default: true
-    Sendable: true # default: true
-  ```
-
-- **`protocolConformanceForEnums`** (_object_)  
-  Controls which protocols generated enums should conform to:
-
-  ```yaml
-  protocolConformanceForEnums:
-    Codable: true # required and cannot be changed
-    Hashable: true # default: true
-    Sendable: true # default: true
-    CaseIterable: true # default: false
-  ```
-
-- **`fieldNamingStrategy`** (_enum_, default: `"camel-case"`)  
-  Controls how field names are transformed from the OpenAPI spec:
-
-  - `"camel-case"`: Converts to camelCase  
-    Example: `user_name` → `userName`
-  - `"snake-case"`: Converts to snake_case  
-    Example: `userName` → `user_name`
-  - `"preserve"`: Uses field names as close to the original as possible while ensuring valid Swift identifiers  
-    Example: `user-name` → `user_name`, `user_name` → `user_name`
-
-- **`pathParameterLabelNamingStrategy`** (_enum_, default: `"camel-case"`)  
-  Controls argument labels for path parameters in method signatures:
-
-  - `"camel-case"`: Use camel-cased parameter names from the OpenAPI spec  
-    Example: `"pet_id"` → `getPet(petId: 123)`
-  - `"snake-case"`: Use snake-cased parameter names from the OpenAPI spec  
-    Example: `"petId"` → `getPet(pet_id: 123)`
-  - `"none"`: No argument labels  
-    Example: `getPet(123)`
-
-- **`queryParameterLabelNamingStrategy`** (_enum_, default: `"camel-case"`)  
-  Controls argument labels for query parameters in method signatures:
-
-  - `"camel-case"`: Use camel-cased parameter names from the OpenAPI spec  
-    Example: `"pet_status"` → `findPets(petStatus: .available)`
-  - `"snake-case"`: Use snake-cased parameter names from the OpenAPI spec  
-    Example: `"petStatus"` → `findPets(pet_status: .available)`
-  - `"none"`: No argument labels  
-    Example: `findPets(.available, ["dog"])`
-
-- **`requestBodyParameterLabel`** (_string_, default: `undefined`)  
-  Controls argument labels for request body parameters in method signatures:
-  - `undefined`: No argument labels  
-    Example: `createPet(newPet)`
-  - Custom string: Use the specified label for request body parameters  
-    Example: `"body"` → `createPet(body: newPet)`
 
 ## Things to watch out for
 
