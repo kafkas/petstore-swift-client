@@ -8,7 +8,7 @@ var client = PetstoreClient(
 
 Task {
     // Pet methods
-    await addPet()
+    // await addPet()
     // await findPetsByStatus()
     // await findPetsByTags()
     // await getPetById()
@@ -31,6 +31,15 @@ Task {
     // await getUserByName()
     // await updateUser()
     // await deleteUser()
+
+    // // Veterinary methods
+    await demonstrateComplexTypes()
+    // await createMedicalRecord()
+    // await getMedicalRecordsByPetId()
+    // await updateMedicalRecord()
+    // await getVeterinarianById()
+    // await scheduleAppointment()
+    // await getAppointmentById()
 
     exit(0)
 }

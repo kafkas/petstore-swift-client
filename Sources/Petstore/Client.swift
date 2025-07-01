@@ -36,6 +36,7 @@ public struct PetstoreClient: Sendable {
     public lazy var pet = PetClient(config: config)
     public lazy var store = StoreClient(config: config)
     public lazy var user = UserClient(config: config)
+    public lazy var veterinary = VeterinaryClient(config: config)
 
     public init(
         baseURL: String = PetstoreEnvironment.default.rawValue,
