@@ -1046,12 +1046,10 @@ components:
           vaccination: "#/components/schemas/VaccinationRecord"
           checkup: "#/components/schemas/CheckupRecord"
           surgery: "#/components/schemas/SurgeryRecord"
-          treatment: "#/components/schemas/TreatmentRecord"
       oneOf:
         - $ref: "#/components/schemas/VaccinationRecord"
         - $ref: "#/components/schemas/CheckupRecord"
         - $ref: "#/components/schemas/SurgeryRecord"
-        - $ref: "#/components/schemas/TreatmentRecord"
     VaccinationRecord:
       allOf:
         - $ref: "#/components/schemas/MedicalRecord"
@@ -1122,29 +1120,6 @@ components:
               items:
                 type: string
               example: ["Pain medication", "Antibiotics"]
-    TreatmentRecord:
-      allOf:
-        - $ref: "#/components/schemas/MedicalRecord"
-        - type: object
-          properties:
-            condition_diagnosed:
-              type: string
-              example: "Ear infection"
-            treatment_plan:
-              type: string
-              example: "Antibiotics for 10 days, follow-up in 2 weeks"
-            medications_prescribed:
-              type: array
-              items:
-                $ref: "#/components/schemas/Medication"
-            treatment_start_date:
-              type: string
-              format: date
-              example: "2024-01-15"
-            treatment_end_date:
-              type: string
-              format: date
-              example: "2024-01-25"
     Medication:
       type: object
       required:
