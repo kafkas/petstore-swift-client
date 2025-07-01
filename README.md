@@ -113,5 +113,9 @@ _SDK should gracefully handle server responses that don't match the OpenAPI spec
 - Figure out how to infer whether an `enum` should conform to String or Int etc.
   - How do we handle "mixed" enums?
 - Plan how to convert simple (undiscriminated) unions
-- Field naming strategy: Must convert kebab-case to camelCase automatically
-  - Handle edge cases like `big-apple` and `bigApple` being in the same object definition
+
+## Things to watch out for
+
+- Ensure unique file names across the generated SDK to avoid conflicts
+- Robust name conflict resolution algo for handling edge cases like `big-apple` and `bigApple` in the same object definition
+- Handle reserved keywords in generated struct fields and enum cases
