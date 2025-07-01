@@ -35,6 +35,8 @@ tags:
       url: https://swagger.io
   - name: user
     description: Operations about user
+  - name: veterinary
+    description: Veterinary and medical records for pets
 paths:
   /pet:
     put:
@@ -665,6 +667,197 @@ paths:
           description: User not found
         default:
           description: Unexpected error
+
+  # The following endpoints are custom additions for testing with more complex models and are not part of the original spec.
+  /veterinary/medical-records:
+    post:
+      tags:
+        - veterinary
+      summary: Create a medical record for a pet
+      description: Create a new medical record entry for a pet
+      operationId: createMedicalRecord
+      requestBody:
+        description: Medical record to create
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicalRecord"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MedicalRecord"
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
+  /veterinary/medical-records/{petId}:
+    get:
+      tags:
+        - veterinary
+      summary: Get medical records for a pet
+      description: Retrieve all medical records for a specific pet
+      operationId: getMedicalRecordsByPetId
+      parameters:
+        - name: petId
+          in: path
+          description: ID of pet to get medical records for
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MedicalRecord"
+        "400":
+          description: Invalid pet ID
+        "404":
+          description: Pet not found
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
+  /veterinary/medical-records/{recordId}:
+    put:
+      tags:
+        - veterinary
+      summary: Update a medical record
+      description: Update an existing medical record
+      operationId: updateMedicalRecord
+      parameters:
+        - name: recordId
+          in: path
+          description: ID of medical record to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated medical record
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicalRecord"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MedicalRecord"
+        "400":
+          description: Invalid input
+        "404":
+          description: Medical record not found
+        "422":
+          description: Validation exception
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
+  /veterinary/veterinarians/{vetId}:
+    get:
+      tags:
+        - veterinary
+      summary: Get veterinarian information
+      description: Retrieve information about a specific veterinarian
+      operationId: getVeterinarianById
+      parameters:
+        - name: vetId
+          in: path
+          description: ID of veterinarian to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VeterinarianInfo"
+        "400":
+          description: Invalid veterinarian ID
+        "404":
+          description: Veterinarian not found
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
+  /veterinary/appointments:
+    post:
+      tags:
+        - veterinary
+      summary: Schedule an appointment
+      description: Schedule a new veterinary appointment
+      operationId: scheduleAppointment
+      requestBody:
+        description: Appointment details
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Appointment"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
+  /veterinary/appointments/{appointmentId}:
+    get:
+      tags:
+        - veterinary
+      summary: Get appointment details
+      description: Retrieve details of a specific appointment
+      operationId: getAppointmentById
+      parameters:
+        - name: appointmentId
+          in: path
+          description: ID of appointment to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          description: Invalid appointment ID
+        "404":
+          description: Appointment not found
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
 components:
   schemas:
     Order:
@@ -806,6 +999,286 @@ components:
           type: string
       xml:
         name: "##default"
+    # The following types are custom additions for testing with more complex models and are not part of the original spec.
+    MedicalRecord:
+      type: object
+      required:
+        - record_type
+        - pet_id
+        - veterinarian_id
+        - created_at
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1001
+        record_type:
+          type: string
+          enum:
+            - vaccination
+            - checkup
+            - surgery
+            - treatment
+        pet_id:
+          type: integer
+          format: int64
+          example: 10
+        veterinarian_id:
+          type: integer
+          format: int64
+          example: 501
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        urgency_level:
+          $ref: "#/components/schemas/UrgencyLevel"
+        notes:
+          type: string
+          example: "Pet responded well to treatment"
+      discriminator:
+        propertyName: record_type
+        mapping:
+          vaccination: "#/components/schemas/VaccinationRecord"
+          checkup: "#/components/schemas/CheckupRecord"
+          surgery: "#/components/schemas/SurgeryRecord"
+          treatment: "#/components/schemas/TreatmentRecord"
+      oneOf:
+        - $ref: "#/components/schemas/VaccinationRecord"
+        - $ref: "#/components/schemas/CheckupRecord"
+        - $ref: "#/components/schemas/SurgeryRecord"
+        - $ref: "#/components/schemas/TreatmentRecord"
+    VaccinationRecord:
+      allOf:
+        - $ref: "#/components/schemas/MedicalRecord"
+        - type: object
+          properties:
+            vaccine_name:
+              type: string
+              example: "Rabies"
+            vaccination_date:
+              type: string
+              format: date
+              example: "2024-01-15"
+            next_due_date:
+              type: string
+              format: date
+              example: "2025-01-15"
+            batch_number:
+              type: string
+              example: "VAC-2024-001"
+            vaccination_site:
+              type: string
+              example: "Left shoulder"
+    CheckupRecord:
+      allOf:
+        - $ref: "#/components/schemas/MedicalRecord"
+        - type: object
+          properties:
+            weight_kg:
+              type: number
+              format: float
+              example: 25.5
+            temperature_celsius:
+              type: number
+              format: float
+              example: 38.5
+            heart_rate_bpm:
+              type: integer
+              example: 120
+            follow_up_required:
+              type: boolean
+              example: false
+            examination_findings:
+              type: string
+              example: "Healthy, good body condition"
+    SurgeryRecord:
+      allOf:
+        - $ref: "#/components/schemas/MedicalRecord"
+        - type: object
+          properties:
+            procedure_name:
+              type: string
+              example: "Spay surgery"
+            surgery_date:
+              type: string
+              format: date-time
+              example: "2024-01-15T09:00:00Z"
+            anesthesia_used:
+              type: string
+              example: "Isoflurane"
+            surgery_duration_minutes:
+              type: integer
+              example: 45
+            recovery_notes:
+              type: string
+              example: "Patient recovered well, eating normally"
+            post_op_medications:
+              type: array
+              items:
+                type: string
+              example: ["Pain medication", "Antibiotics"]
+    TreatmentRecord:
+      allOf:
+        - $ref: "#/components/schemas/MedicalRecord"
+        - type: object
+          properties:
+            condition_diagnosed:
+              type: string
+              example: "Ear infection"
+            treatment_plan:
+              type: string
+              example: "Antibiotics for 10 days, follow-up in 2 weeks"
+            medications_prescribed:
+              type: array
+              items:
+                $ref: "#/components/schemas/Medication"
+            treatment_start_date:
+              type: string
+              format: date
+              example: "2024-01-15"
+            treatment_end_date:
+              type: string
+              format: date
+              example: "2024-01-25"
+    Medication:
+      type: object
+      required:
+        - medication_name
+        - dosage
+        - frequency
+      properties:
+        medication_name:
+          type: string
+          example: "Amoxicillin"
+        dosage:
+          type: string
+          example: "250mg"
+        frequency:
+          type: string
+          example: "Twice daily"
+        administration_method:
+          type: string
+          example: "Oral"
+        special_instructions:
+          type: string
+          example: "Give with food"
+    VeterinarianInfo:
+      type: object
+      required:
+        - id
+        - first_name
+        - last_name
+        - license_number
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 501
+        first_name:
+          type: string
+          example: "Dr. Sarah"
+        last_name:
+          type: string
+          example: "Johnson"
+        license_number:
+          type: string
+          example: "VET-2024-001"
+        specialization:
+          type: string
+          example: "Small Animal Medicine"
+        years_experience:
+          type: integer
+          example: 15
+        clinic_name:
+          type: string
+          example: "Happy Paws Veterinary Clinic"
+        contact_method:
+          $ref: "#/components/schemas/ContactMethod"
+        phone_number:
+          type: string
+          example: "+1-555-123-4567"
+        email_address:
+          type: string
+          format: email
+          example: "dr.johnson@happypaws.com"
+        emergency_contact_available:
+          type: boolean
+          example: true
+    Appointment:
+      type: object
+      required:
+        - pet_id
+        - veterinarian_id
+        - appointment_date
+        - appointment_status
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2001
+        pet_id:
+          type: integer
+          format: int64
+          example: 10
+        veterinarian_id:
+          type: integer
+          format: int64
+          example: 501
+        appointment_date:
+          type: string
+          format: date-time
+          example: "2024-02-15T14:30:00Z"
+        appointment_status:
+          $ref: "#/components/schemas/AppointmentStatus"
+        urgency_level:
+          $ref: "#/components/schemas/UrgencyLevel"
+        reason_for_visit:
+          type: string
+          example: "Annual checkup"
+        estimated_duration_minutes:
+          type: integer
+          example: 30
+        special_instructions:
+          type: string
+          example: "Pet is nervous around other animals"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+    ContactMethod:
+      type: string
+      enum:
+        - phone
+        - email
+        - both
+      example: "both"
+    AppointmentStatus:
+      type: string
+      enum:
+        - scheduled
+        - confirmed
+        - in_progress
+        - completed
+        - cancelled
+        - no_show
+      example: "scheduled"
+    UrgencyLevel:
+      type: string
+      enum:
+        - routine
+        - urgent
+        - emergency
+      example: "routine"
+
   requestBodies:
     Pet:
       description: Pet object that needs to be added to the store
