@@ -12,21 +12,21 @@ struct HTTPClient: Sendable {
     func performRequest<T: Decodable>(
         method: HTTP.Method,
         path: String,
-        requestHeaders: [String: String] = [:],
-        queryParams: [String: String] = [:],
-        body: (any Encodable)? = nil,
+        headers requestHeaders: [String: String] = [:],
+        queryParams requestQueryParams: [String: String] = [:],
+        body requestBody: (any Encodable)? = nil,
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
-        let requestBody: HTTP.RequestBody? = body.map { .encodable($0) }
+        let requestBody: HTTP.RequestBody? = requestBody.map { .encodable($0) }
 
         let request = buildRequest(
             method: method,
-            contentType: .applicationJson,
-            requestHeaders: requestHeaders,
             path: path,
-            queryParams: queryParams,
-            body: requestBody,
+            requestContentType: .applicationJson,
+            requestHeaders: requestHeaders,
+            requestQueryParams: requestQueryParams,
+            requestBody: requestBody,
             requestOptions: requestOptions
         )
 
@@ -56,19 +56,19 @@ struct HTTPClient: Sendable {
         method: HTTP.Method,
         path: String,
         requestHeaders: [String: String] = [:],
-        queryParams: [String: String] = [:],
-        body: (any Encodable)? = nil,
+        requestQueryParams: [String: String] = [:],
+        requestBody: (any Encodable)? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let requestBody: HTTP.RequestBody? = body.map { .encodable($0) }
+        let requestBody: HTTP.RequestBody? = requestBody.map { .encodable($0) }
 
         let request = buildRequest(
             method: method,
-            contentType: .applicationJson,
-            requestHeaders: requestHeaders,
             path: path,
-            queryParams: queryParams,
-            body: requestBody,
+            requestContentType: .applicationJson,
+            requestHeaders: requestHeaders,
+            requestQueryParams: requestQueryParams,
+            requestBody: requestBody,
             requestOptions: requestOptions
         )
         _ = try await executeRequestWithURLSession(request)
@@ -78,18 +78,18 @@ struct HTTPClient: Sendable {
         method: HTTP.Method,
         path: String,
         requestHeaders: [String: String] = [:],
-        queryParams: [String: String] = [:],
+        requestQueryParams: [String: String] = [:],
         fileData: Data,
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
         let request = buildRequest(
             method: method,
-            contentType: .applicationOctetStream,
-            requestHeaders: requestHeaders,
             path: path,
-            queryParams: queryParams,
-            body: .data(fileData),
+            requestContentType: .applicationOctetStream,
+            requestHeaders: requestHeaders,
+            requestQueryParams: requestQueryParams,
+            requestBody: .data(fileData),
             requestOptions: requestOptions
         )
         let (data, _) = try await executeRequestWithURLSession(request)
@@ -103,16 +103,16 @@ struct HTTPClient: Sendable {
 
     private func buildRequest(
         method: HTTP.Method,
-        contentType: HTTP.ContentType,
-        requestHeaders: [String: String],
         path: String,
-        queryParams: [String: String],
-        body: HTTP.RequestBody? = nil,
+        requestContentType: HTTP.ContentType,
+        requestHeaders: [String: String],
+        requestQueryParams: [String: String],
+        requestBody: HTTP.RequestBody? = nil,
         requestOptions: RequestOptions? = nil
     ) -> URLRequest {
         // Init with URL
         let url = buildRequestURL(
-            path: path, queryParams: queryParams, requestOptions: requestOptions
+            path: path, requestQueryParams: requestQueryParams, requestOptions: requestOptions
         )
         var request = URLRequest(url: url)
 
@@ -127,7 +127,7 @@ struct HTTPClient: Sendable {
 
         // Set headers
         let headers = buildRequestHeaders(
-            contentType: contentType,
+            requestContentType: requestContentType,
             requestHeaders: requestHeaders,
             requestOptions: requestOptions
         )
@@ -136,8 +136,9 @@ struct HTTPClient: Sendable {
         }
 
         // Set body
-        if let body = body {
-            request.httpBody = buildRequestBody(body: body, requestOptions: requestOptions)
+        if let requestBody = requestBody {
+            request.httpBody = buildRequestBody(
+                requestBody: requestBody, requestOptions: requestOptions)
         }
 
         return request
@@ -145,18 +146,18 @@ struct HTTPClient: Sendable {
 
     private func buildRequestURL(
         path: String,
-        queryParams: [String: String],
+        requestQueryParams: [String: String],
         requestOptions: RequestOptions? = nil
     ) -> URL {
-        let endpointUrl = "\(clientConfig.baseURL)\(path)"
-        guard var components: URLComponents = URLComponents(string: endpointUrl) else {
+        let endpointURL: String = "\(clientConfig.baseURL)\(path)"
+        guard var components: URLComponents = URLComponents(string: endpointURL) else {
             precondition(
                 false,
-                "Invalid URL '\(endpointUrl)' - this indicates an unexpected error in the SDK."
+                "Invalid URL '\(endpointURL)' - this indicates an unexpected error in the SDK."
             )
         }
-        if !queryParams.isEmpty {
-            components.queryItems = queryParams.map { key, value in
+        if !requestQueryParams.isEmpty {
+            components.queryItems = requestQueryParams.map { key, value in
                 URLQueryItem(name: key, value: value)
             }
         }
@@ -176,12 +177,12 @@ struct HTTPClient: Sendable {
     }
 
     private func buildRequestHeaders(
-        contentType: HTTP.ContentType,
+        requestContentType: HTTP.ContentType,
         requestHeaders: [String: String],
         requestOptions: RequestOptions? = nil
     ) -> [String: String] {
         var headers = clientConfig.headers ?? [:]
-        headers["Content-Type"] = contentType.rawValue
+        headers["Content-Type"] = requestContentType.rawValue
         if let apiKey = requestOptions?.apiKey ?? clientConfig.apiKey {
             headers["api_key"] = apiKey
         }
@@ -198,10 +199,10 @@ struct HTTPClient: Sendable {
     }
 
     private func buildRequestBody(
-        body: HTTP.RequestBody,
+        requestBody: HTTP.RequestBody,
         requestOptions: RequestOptions? = nil
     ) -> Data {
-        switch body {
+        switch requestBody {
         case .encodable(let encodableBody):
             do {
                 // TODO: Merge requestOptions.additionalBodyParameters into this

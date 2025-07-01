@@ -96,7 +96,7 @@ public struct UserClient: Sendable {
         return try await httpClient.performRequest(
             method: .put,
             path: "/user/\(username)",
-            body: data,
+            requestBody: data,
             requestOptions: requestOptions
         )
     }
