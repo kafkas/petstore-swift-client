@@ -107,7 +107,9 @@ _SDK should gracefully handle server responses that don't match the OpenAPI spec
 ## Things to watch out for
 
 - Ensure unique file names across the generated SDK to avoid conflicts
-- Robust name conflict resolution algo for handling edge cases like `big-apple` and `bigApple` in the same object definition
+- Robust name conflict resolution algo handling:
+  - edge cases like `big-apple` and `bigApple` in the same object definition
+  - conflicts in function param labels
 - Handle reserved keywords in generated struct fields and enum cases
 
 ## TODOs
@@ -115,6 +117,7 @@ _SDK should gracefully handle server responses that don't match the OpenAPI spec
 - Make `Sources/PetstoreSDK/Core` static across all SDKs
   - Don't reference `PetstoreError` in `HTTPClient`
 - Specify default values in model schemas?
+- Path/query params encoding
 - Specify user agent in transport layer
 - Figure out how to infer whether an `enum` should conform to String or Int etc.
   - How do we handle "mixed" enums?

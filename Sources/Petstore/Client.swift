@@ -30,9 +30,11 @@ import Foundation
 /// )
 /// ```
 public struct PetstoreClient: Sendable {
-    public let pet: PetClient
-    public let store: StoreClient
-    public let user: UserClient
+    private let config: ClientConfig
+
+    public lazy var pet = PetClient(config: config)
+    public lazy var store = StoreClient(config: config)
+    public lazy var user = UserClient(config: config)
 
     public init(
         baseURL: String = PetstoreEnvironment.default.rawValue,
@@ -42,7 +44,7 @@ public struct PetstoreClient: Sendable {
         headers: [String: String] = [:],
         urlSession: URLSession? = nil
     ) {
-        let config = ClientConfig(
+        self.config = ClientConfig(
             baseURL: baseURL,
             apiKey: apiKey,
             token: token,
@@ -50,9 +52,5 @@ public struct PetstoreClient: Sendable {
             headers: headers,
             urlSession: urlSession
         )
-        self.pet = PetClient(config: config)
-        self.store = StoreClient(config: config)
-        self.user = UserClient(config: config)
     }
-
 }

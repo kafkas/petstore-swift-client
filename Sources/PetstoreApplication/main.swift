@@ -1,7 +1,7 @@
 import Foundation
 import Petstore
 
-let client = PetstoreClient(
+var client = PetstoreClient(
     baseURL: "http://localhost:8080",
     apiKey: "abc123"
 )
