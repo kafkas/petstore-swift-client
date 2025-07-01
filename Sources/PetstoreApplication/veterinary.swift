@@ -20,7 +20,7 @@ func createMedicalRecord() async {
     let medicalRecord = MedicalRecord.vaccination(vaccinationRecord)
 
     do {
-        let result = try await client.veterinary.createMedicalRecord(medicalRecord)
+        let result = try await client.veterinary.createMedicalRecord(request: medicalRecord)
         print("✅ Medical record created successfully")
         print("Record: \(result)")
     } catch {
@@ -65,7 +65,7 @@ func updateMedicalRecord() async {
     let medicalRecord = MedicalRecord.checkup(checkupRecord)
 
     do {
-        let result = try await client.veterinary.updateMedicalRecord(recordId: 1001, medicalRecord)
+        let result = try await client.veterinary.updateMedicalRecord(recordId: 1001, request: medicalRecord)
         print("✅ Medical record updated successfully")
         print("Updated record: \(result)")
     } catch {
@@ -108,7 +108,7 @@ func scheduleAppointment() async {
     )
 
     do {
-        let result = try await client.veterinary.scheduleAppointment(appointment)
+        let result = try await client.veterinary.scheduleAppointment(request: appointment)
         print("✅ Appointment scheduled successfully")
         print("Appointment ID: \(result.id ?? 0)")
         print("Date: \(result.appointmentDate)")

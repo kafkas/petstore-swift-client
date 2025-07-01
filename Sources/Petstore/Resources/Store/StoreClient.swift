@@ -21,11 +21,13 @@ public struct StoreClient: Sendable {
     /// Place an order for a pet.
     ///
     /// Place a new order in the store.
-    public func placeOrder(_ data: Order, requestOptions: RequestOptions? = nil) async throws -> Order {
+    public func placeOrder(request: Order, requestOptions: RequestOptions? = nil) async throws
+        -> Order
+    {
         return try await httpClient.performRequest(
             method: .post,
             path: "/store/order",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: Order.self
         )
@@ -35,7 +37,9 @@ public struct StoreClient: Sendable {
     ///
     /// For valid response try integer IDs with value <= 5 or > 10. Other values will generate exceptions.
     /// - Parameter orderId: ID of order that needs to be fetched
-    public func getOrderById(orderId: Int64, requestOptions: RequestOptions? = nil) async throws -> Order {
+    public func getOrderById(orderId: Int64, requestOptions: RequestOptions? = nil) async throws
+        -> Order
+    {
         return try await httpClient.performRequest(
             method: .get,
             path: "/store/order/\(orderId)",

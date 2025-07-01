@@ -11,12 +11,12 @@ public struct UserClient: Sendable {
     /// Create user.
     ///
     /// This can only be done by the logged in user.
-    public func createUser(_ data: User, requestOptions: RequestOptions? = nil) async throws -> User
+    public func createUser(request: User, requestOptions: RequestOptions? = nil) async throws -> User
     {
         return try await httpClient.performRequest(
             method: .post,
             path: "/user",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: User.self
         )
@@ -25,13 +25,13 @@ public struct UserClient: Sendable {
     /// Creates list of users with given input array.
     ///
     /// Creates list of users with given input array.
-    public func createUsersWithListInput(_ data: [User], requestOptions: RequestOptions? = nil)
+    public func createUsersWithListInput(request: [User], requestOptions: RequestOptions? = nil)
         async throws -> User
     {
         return try await httpClient.performRequest(
             method: .post,
             path: "/user/createWithList",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: User.self
         )
@@ -90,13 +90,13 @@ public struct UserClient: Sendable {
     /// - Parameters:
     ///   - username: name that need to be deleted
     ///   - data: Update an existent user in the store
-    public func updateUser(username: String, _ data: User, requestOptions: RequestOptions? = nil)
+    public func updateUser(username: String, request: User, requestOptions: RequestOptions? = nil)
         async throws
     {
         return try await httpClient.performRequest(
             method: .put,
             path: "/user/\(username)",
-            body: data,
+            body: request,
             requestOptions: requestOptions
         )
     }

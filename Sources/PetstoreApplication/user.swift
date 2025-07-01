@@ -16,7 +16,7 @@ func createUser() async {
     print("Creating user...")
     do {
         print("Making API request...")
-        let createdUser = try await client.user.createUser(sampleUser)
+        let createdUser = try await client.user.createUser(request: sampleUser)
         print("✅ User successfully created!")
         print("User ID: \(createdUser.id ?? 0)")
         print("Username: \(createdUser.username ?? "unknown")")
@@ -40,7 +40,7 @@ func createUsersWithListInput() async {
             User(
                 username: "bobsmith", firstName: "Bob", lastName: "Smith", email: "bob@example.com"),
         ]
-        let result = try await client.user.createUsersWithListInput(users)
+        let result = try await client.user.createUsersWithListInput(request: users)
         print("✅ Users successfully created!")
         print("Result user: \(result.username ?? "unknown")")
     } catch {
@@ -116,7 +116,7 @@ func updateUser() async {
             phone: sampleUser.phone,
             userStatus: 2
         )
-        try await client.user.updateUser(username: "johndoe", updatedUser)
+        try await client.user.updateUser(username: "johndoe", request: updatedUser)
         print("✅ User successfully updated!")
     } catch {
         print("❌ Failed to update user: \(error.localizedDescription)")

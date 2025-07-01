@@ -11,13 +11,13 @@ public struct VeterinaryClient: Sendable {
     /// Create a medical record for a pet
     ///
     /// Create a new medical record entry for a pet
-    public func createMedicalRecord(_ data: MedicalRecord, requestOptions: RequestOptions? = nil)
+    public func createMedicalRecord(request: MedicalRecord, requestOptions: RequestOptions? = nil)
         async throws -> MedicalRecord
     {
         return try await httpClient.performRequest(
             method: .post,
             path: "/veterinary/medical-records",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: MedicalRecord.self
         )
@@ -43,12 +43,12 @@ public struct VeterinaryClient: Sendable {
     /// Update an existing medical record
     /// - Parameter recordId: ID of medical record to update
     public func updateMedicalRecord(
-        recordId: Int64, _ data: MedicalRecord, requestOptions: RequestOptions? = nil
+        recordId: Int64, request: MedicalRecord, requestOptions: RequestOptions? = nil
     ) async throws -> MedicalRecord {
         return try await httpClient.performRequest(
             method: .put,
             path: "/veterinary/medical-records/\(recordId)",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: MedicalRecord.self
         )
@@ -72,13 +72,13 @@ public struct VeterinaryClient: Sendable {
     /// Schedule an appointment
     ///
     /// Schedule a new veterinary appointment
-    public func scheduleAppointment(_ data: Appointment, requestOptions: RequestOptions? = nil)
+    public func scheduleAppointment(request: Appointment, requestOptions: RequestOptions? = nil)
         async throws -> Appointment
     {
         return try await httpClient.performRequest(
             method: .post,
             path: "/veterinary/appointments",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: Appointment.self
         )

@@ -11,11 +11,11 @@ public struct PetClient: Sendable {
     /// Update an existing pet.
     ///
     /// Update an existing pet by Id.
-    public func updatePet(_ data: Pet, requestOptions: RequestOptions? = nil) async throws -> Pet {
+    public func updatePet(request: Pet, requestOptions: RequestOptions? = nil) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .put,
             path: "/pet",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: Pet.self
         )
@@ -24,11 +24,11 @@ public struct PetClient: Sendable {
     /// Add a new pet to the store.
     ///
     /// Add a new pet to the store.
-    public func addPet(_ data: Pet, requestOptions: RequestOptions? = nil) async throws -> Pet {
+    public func addPet(request: Pet, requestOptions: RequestOptions? = nil) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .post,
             path: "/pet",
-            body: data,
+            body: request,
             requestOptions: requestOptions,
             responseType: Pet.self
         )
@@ -136,7 +136,7 @@ public struct PetClient: Sendable {
     ///   - additionalMetadata: Additional Metadata
     public func uploadFile(
         petId: Int64,
-        _ fileData: Data,
+        _ request: Data,
         additionalMetadata: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ApiResponse {
@@ -145,7 +145,7 @@ public struct PetClient: Sendable {
             method: .post,
             path: "/pet/\(petId)/uploadImage",
             queryParams: queryParams.toDictionary(),
-            fileData: fileData,
+            fileData: request,
             requestOptions: requestOptions,
             responseType: ApiResponse.self
         )

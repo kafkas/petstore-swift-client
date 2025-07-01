@@ -14,7 +14,7 @@ func addPet() async {
 
     do {
         print("Making API request...")
-        let createdPet = try await client.pet.addPet(fido, requestOptions: .init(apiKey: "overriding_key"))
+        let createdPet = try await client.pet.addPet(request: fido, requestOptions: .init(apiKey: "overriding_key"))
         print("✅ Pet successfully added!")
         print("Pet ID: \(createdPet.id ?? 0)")
         print("Pet Name: \(createdPet.name)")
@@ -39,7 +39,7 @@ func updatePet() async {
 
     do {
         print("Making API request...")
-        let updatedPet = try await client.pet.updatePet(newPet)
+        let updatedPet = try await client.pet.updatePet(request: newPet)
         print("✅ Pet successfully updated!")
         print("Pet ID: \(updatedPet.id ?? 0)")
         print("Pet Name: \(updatedPet.name)")

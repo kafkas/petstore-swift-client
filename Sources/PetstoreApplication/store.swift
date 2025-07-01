@@ -28,7 +28,7 @@ func placeOrder() async {
     print("Placing order...")
     do {
         print("Making API request...")
-        let placedOrder = try await client.store.placeOrder(sampleOrder)
+        let placedOrder = try await client.store.placeOrder(request: sampleOrder)
         print("✅ Order successfully placed!")
         print(placedOrder)
     } catch {
