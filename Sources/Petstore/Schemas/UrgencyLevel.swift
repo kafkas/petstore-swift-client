@@ -1,5 +1,5 @@
-public enum UrgencyLevel: String, Codable, Hashable, Sendable, CaseIterable {
-    case routine = "routine"
-    case urgent = "urgent"
-    case emergency = "emergency"
+public enum UrgencyLevel: Int, Codable, Hashable, Sendable, CaseIterable {
+    case routine = 1
+    case urgent = 2
+    case emergency = 3
 }

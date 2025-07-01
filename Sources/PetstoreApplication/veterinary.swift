@@ -165,6 +165,7 @@ func demonstrateComplexTypes() async {
 
     let urgencyLevels: [UrgencyLevel] = [.routine, .urgent, .emergency]
     print("🚨 Urgency levels: \(urgencyLevels)")
+    print("   Raw values: \(urgencyLevels.map { $0.rawValue })")
 
     // Demonstrate discriminated union
     print("\n📋 Discriminated Union Examples:")
