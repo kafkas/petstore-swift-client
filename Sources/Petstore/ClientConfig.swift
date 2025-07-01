@@ -26,7 +26,6 @@ public struct ClientConfig: Sendable {
         self.headers = headers
         self.urlSession = urlSession ?? buildURLSession(timeoutSeconds: timeout)
     }
-
 }
 
 private func buildURLSession(timeoutSeconds: Int?) -> URLSession {

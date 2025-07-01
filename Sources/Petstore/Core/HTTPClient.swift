@@ -1,28 +1,21 @@
 import Foundation
 
 struct HTTPClient: Sendable {
-    private let config: ClientConfig
+    private let clientConfig: ClientConfig
     private let jsonEncoder = Serde.jsonEncoder
     private let jsonDecoder = Serde.jsonDecoder
 
     init(config: ClientConfig) {
-        self.config = config
-    }
-
-    private var baseURL: String {
-        config.baseURL
-    }
-
-    private var urlSession: URLSession {
-        config.urlSession
+        self.clientConfig = config
     }
 
     func performRequest<T: Decodable>(
         method: HTTP.Method,
         path: String,
-        additionalHeaders: [String: String] = [:],
+        requestHeaders: [String: String] = [:],
         queryParams: [String: String] = [:],
         body: (any Encodable)? = nil,
+        requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
         let requestBody: HTTP.RequestBody? = body.map { .encodable($0) }
@@ -30,7 +23,7 @@ struct HTTPClient: Sendable {
         let request = buildRequest(
             method: method,
             contentType: .applicationJson,
-            additionalHeaders: additionalHeaders,
+            requestHeaders: requestHeaders,
             path: path,
             queryParams: queryParams,
             body: requestBody
@@ -61,16 +54,17 @@ struct HTTPClient: Sendable {
     func performRequest(
         method: HTTP.Method,
         path: String,
-        additionalHeaders: [String: String] = [:],
+        requestHeaders: [String: String] = [:],
         queryParams: [String: String] = [:],
-        body: (any Encodable)? = nil
+        body: (any Encodable)? = nil,
+        requestOptions: RequestOptions? = nil
     ) async throws {
         let requestBody: HTTP.RequestBody? = body.map { .encodable($0) }
 
         let request = buildRequest(
             method: method,
             contentType: .applicationJson,
-            additionalHeaders: additionalHeaders,
+            requestHeaders: requestHeaders,
             path: path,
             queryParams: queryParams,
             body: requestBody
@@ -81,15 +75,16 @@ struct HTTPClient: Sendable {
     func performFileUpload<T: Decodable>(
         method: HTTP.Method,
         path: String,
-        additionalHeaders: [String: String] = [:],
+        requestHeaders: [String: String] = [:],
         queryParams: [String: String] = [:],
         fileData: Data,
+        requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
         let request = buildRequest(
             method: method,
             contentType: .applicationOctetStream,
-            additionalHeaders: additionalHeaders,
+            requestHeaders: requestHeaders,
             path: path,
             queryParams: queryParams,
             body: .data(fileData)
@@ -106,73 +101,117 @@ struct HTTPClient: Sendable {
     private func buildRequest(
         method: HTTP.Method,
         contentType: HTTP.ContentType,
-        additionalHeaders: [String: String],
+        requestHeaders: [String: String],
         path: String,
         queryParams: [String: String],
-        body: HTTP.RequestBody? = nil
+        body: HTTP.RequestBody? = nil,
+        requestOptions: RequestOptions? = nil
     ) -> URLRequest {
-        let fullUrl = "\(baseURL)\(path)"
-        guard var components: URLComponents = URLComponents(string: fullUrl) else {
-            precondition(
-                false,
-                "Invalid base URL '\(baseURL)' - this indicates an unexpected error in the SDK."
-            )
+        // Init with URL
+        let url = buildRequestURL(
+            path: path, queryParams: queryParams, requestOptions: requestOptions
+        )
+        var request = URLRequest(url: url)
+
+        // Set timeout
+        // TODO: URLSession already has a timeout setting; find out if this is the right way to override it at the request level
+        if let timeout = requestOptions?.timeout {
+            request.timeoutInterval = TimeInterval(timeout)
         }
 
+        // Set method
+        request.httpMethod = method.rawValue
+
+        // Set headers
+        let headers = buildRequestHeaders(
+            contentType: contentType,
+            requestHeaders: requestHeaders,
+            requestOptions: requestOptions
+        )
+        for (key, value) in headers {
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+
+        // Set body
+        if let body = body {
+            request.httpBody = buildRequestBody(body: body, requestOptions: requestOptions)
+        }
+
+        return request
+    }
+
+    private func buildRequestURL(
+        path: String,
+        queryParams: [String: String],
+        requestOptions: RequestOptions? = nil
+    ) -> URL {
+        let endpointUrl = "\(clientConfig.baseURL)\(path)"
+        guard var components: URLComponents = URLComponents(string: endpointUrl) else {
+            precondition(
+                false,
+                "Invalid URL '\(endpointUrl)' - this indicates an unexpected error in the SDK."
+            )
+        }
         if !queryParams.isEmpty {
             components.queryItems = queryParams.map { key, value in
                 URLQueryItem(name: key, value: value)
             }
         }
-
+        if let additionalQueryParams = requestOptions?.additionalQueryParameters {
+            components.queryItems?.append(
+                contentsOf: additionalQueryParams.map { key, value in
+                    URLQueryItem(name: key, value: value)
+                })
+        }
         guard let url = components.url else {
             precondition(
                 false,
                 "Failed to construct URL from components - this indicates an unexpected error in the SDK."
             )
         }
+        return url
+    }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-
-        request.setValue(contentType.rawValue, forHTTPHeaderField: "Content-Type")
-
-        if let apiKey = config.apiKey {
-            request.setValue(apiKey, forHTTPHeaderField: "api_key")
+    private func buildRequestHeaders(
+        contentType: HTTP.ContentType,
+        requestHeaders: [String: String],
+        requestOptions: RequestOptions? = nil
+    ) -> [String: String] {
+        var headers = clientConfig.headers ?? [:]
+        headers["Content-Type"] = contentType.rawValue
+        if let apiKey = requestOptions?.apiKey ?? clientConfig.apiKey {
+            headers["api_key"] = apiKey
         }
-
-        if let token = config.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        if let token = requestOptions?.token ?? clientConfig.token {
+            headers["Authorization"] = "Bearer \(token)"
         }
+        for (key, value) in requestHeaders {
+            headers[key] = value
+        }
+        for (key, value) in requestOptions?.additionalHeaders ?? [:] {
+            headers[key] = value
+        }
+        return headers
+    }
 
-        if let baseHeaders = config.headers {
-            for (key, value) in baseHeaders {
-                request.setValue(value, forHTTPHeaderField: key)
+    private func buildRequestBody(
+        body: HTTP.RequestBody,
+        requestOptions: RequestOptions? = nil
+    ) -> Data {
+        switch body {
+        case .encodable(let encodableBody):
+            do {
+                // TODO: Merge requestOptions.additionalBodyParameters into this
+                return try jsonEncoder.encode(encodableBody)
+            } catch {
+                precondition(
+                    false,
+                    "Failed to encode request body: \(error) - this indicates an unexpected error in the SDK."
+                )
             }
+        case .data(let dataBody):
+            return dataBody
         }
-
-        // Add additional headers (these can override auth headers if needed)
-        for (key, value) in additionalHeaders {
-            request.setValue(value, forHTTPHeaderField: key)
-        }
-
-        if let body = body {
-            switch body {
-            case .encodable(let encodableBody):
-                do {
-                    request.httpBody = try jsonEncoder.encode(encodableBody)
-                } catch {
-                    precondition(
-                        false,
-                        "Failed to encode request body: \(error) - this indicates an unexpected error in the SDK."
-                    )
-                }
-            case .data(let dataBody):
-                request.httpBody = dataBody
-            }
-        }
-
-        return request
     }
 
     private func executeRequestWithURLSession(
@@ -183,7 +222,7 @@ struct HTTPClient: Sendable {
 
             // TODO: Handle retries
 
-            let (data, response) = try await urlSession.data(for: request)
+            let (data, response) = try await clientConfig.urlSession.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw PetstoreError.invalidResponse

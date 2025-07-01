@@ -14,8 +14,8 @@ struct HTTP {
     }
 
     enum RequestBody {
+        // TODO: Rename to json-encodable
         case encodable(any Encodable)
         case data(Data)
     }
-
 }

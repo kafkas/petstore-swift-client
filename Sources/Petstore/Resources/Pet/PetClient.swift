@@ -11,7 +11,7 @@ public struct PetClient: Sendable {
     /// Update an existing pet.
     ///
     /// Update an existing pet by Id.
-    public func updatePet(_ data: Pet) async throws -> Pet {
+    public func updatePet(_ data: Pet, requestOptions: RequestOptions? = nil) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .put,
             path: "/pet",
@@ -23,7 +23,7 @@ public struct PetClient: Sendable {
     /// Add a new pet to the store.
     ///
     /// Add a new pet to the store.
-    public func addPet(_ data: Pet) async throws -> Pet {
+    public func addPet(_ data: Pet, requestOptions: RequestOptions? = nil) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .post,
             path: "/pet",
@@ -36,7 +36,7 @@ public struct PetClient: Sendable {
     ///
     /// Delete a pet.
     /// - Parameter petId: Pet id to delete
-    public func deletePet(petId: Int) async throws {
+    public func deletePet(petId: Int, requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .delete,
             path: "/pet/\(petId)"
@@ -53,7 +53,8 @@ public struct PetClient: Sendable {
     public func findPetsByStatus(
         status: String? = nil,
         limit: Int? = nil,
-        offset: Int? = nil
+        offset: Int? = nil,
+        requestOptions: RequestOptions? = nil
     ) async throws -> [Pet] {
         let queryParams = FindPetsByStatus.QueryParams(
             status: status,
@@ -72,7 +73,7 @@ public struct PetClient: Sendable {
     ///
     /// Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
     /// - Parameter tags: Tags to filter by
-    public func findPetsByTags(tags: [String]? = nil) async throws -> [Pet] {
+    public func findPetsByTags(tags: [String]? = nil, requestOptions: RequestOptions? = nil) async throws -> [Pet] {
         let queryParams = FindPetsByTags.QueryParams(tags: tags)
         return try await httpClient.performRequest(
             method: .get,
@@ -86,7 +87,7 @@ public struct PetClient: Sendable {
     ///
     /// Returns a single pet.
     /// - Parameter petId: ID of pet to return
-    public func getPetById(petId: Int64) async throws -> Pet {
+    public func getPetById(petId: Int64, requestOptions: RequestOptions? = nil) async throws -> Pet {
         return try await httpClient.performRequest(
             method: .get,
             path: "/pet/\(petId)",
@@ -104,7 +105,8 @@ public struct PetClient: Sendable {
     public func updatePetWithForm(
         petId: Int64,
         name: String? = nil,
-        status: String? = nil
+        status: String? = nil,
+        requestOptions: RequestOptions? = nil
     ) async throws -> Pet {
         let queryParams = UpdatePetWithForm.QueryParams(name: name, status: status)
         return try await httpClient.performRequest(
@@ -125,7 +127,8 @@ public struct PetClient: Sendable {
     public func uploadFile(
         petId: Int64,
         _ fileData: Data,
-        additionalMetadata: String? = nil
+        additionalMetadata: String? = nil,
+        requestOptions: RequestOptions? = nil
     ) async throws -> ApiResponse {
         let queryParams = UploadFile.QueryParams(additionalMetadata: additionalMetadata)
         return try await httpClient.performFileUpload(

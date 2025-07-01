@@ -11,7 +11,8 @@ public struct UserClient: Sendable {
     /// Create user.
     ///
     /// This can only be done by the logged in user.
-    public func createUser(_ data: User) async throws -> User {
+    public func createUser(_ data: User, requestOptions: RequestOptions? = nil) async throws -> User
+    {
         return try await httpClient.performRequest(
             method: .post,
             path: "/user",
@@ -23,7 +24,9 @@ public struct UserClient: Sendable {
     /// Creates list of users with given input array.
     ///
     /// Creates list of users with given input array.
-    public func createUsersWithListInput(_ data: [User]) async throws -> User {
+    public func createUsersWithListInput(_ data: [User], requestOptions: RequestOptions? = nil)
+        async throws -> User
+    {
         return try await httpClient.performRequest(
             method: .post,
             path: "/user/createWithList",
@@ -40,7 +43,8 @@ public struct UserClient: Sendable {
     ///   - password: The password for login in clear text
     public func loginUser(
         username: String? = nil,
-        password: String? = nil
+        password: String? = nil,
+        requestOptions: RequestOptions? = nil
     ) async throws -> String {
         let queryParams = LoginUser.QueryParams(username: username, password: password)
         return try await httpClient.performRequest(
@@ -54,7 +58,7 @@ public struct UserClient: Sendable {
     /// Logs out current logged in user session.
     ///
     /// Log user out of the system.
-    public func logoutUser() async throws {
+    public func logoutUser(requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .get,
             path: "/user/logout"
@@ -65,7 +69,9 @@ public struct UserClient: Sendable {
     ///
     /// Get user detail based on username.
     /// - Parameter username: The name that needs to be fetched. Use user1 for testing
-    public func getUserByName(username: String) async throws -> User {
+    public func getUserByName(username: String, requestOptions: RequestOptions? = nil) async throws
+        -> User
+    {
         return try await httpClient.performRequest(
             method: .get,
             path: "/user/\(username)",
@@ -79,7 +85,9 @@ public struct UserClient: Sendable {
     /// - Parameters:
     ///   - username: name that need to be deleted
     ///   - data: Update an existent user in the store
-    public func updateUser(username: String, _ data: User) async throws {
+    public func updateUser(username: String, _ data: User, requestOptions: RequestOptions? = nil)
+        async throws
+    {
         return try await httpClient.performRequest(
             method: .put,
             path: "/user/\(username)",
@@ -91,7 +99,7 @@ public struct UserClient: Sendable {
     ///
     /// This can only be done by the logged in user.
     /// - Parameter username: The name that needs to be deleted
-    public func deleteUser(username: String) async throws {
+    public func deleteUser(username: String, requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .delete,
             path: "/user/\(username)"
