@@ -3,6 +3,7 @@ import Foundation
 public struct ClientConfig: Sendable {
     struct Defaults {
         static let timeout: Int = 60
+        static let maxRetries: Int = 2
     }
 
     let baseURL: String
@@ -15,8 +16,8 @@ public struct ClientConfig: Sendable {
         baseURL: String,
         apiKey: String? = nil,
         token: String? = nil,
-        timeout: Int? = nil,
         headers: [String: String]? = nil,
+        timeout: Int? = nil,
         urlSession: URLSession? = nil
     ) {
         self.baseURL = baseURL

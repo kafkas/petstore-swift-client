@@ -181,6 +181,8 @@ struct HTTPClient: Sendable {
         do {
             print("Executing request: \(request)")  // For debugging
 
+            // TODO: Handle retries
+
             let (data, response) = try await urlSession.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
