@@ -33,8 +33,7 @@ Task {
     // await deleteUser()
 
     // // Veterinary methods
-    await demonstrateComplexTypes()
-    // await createMedicalRecord()
+    await createMedicalRecord()
     // await getMedicalRecordsByPetId()
     // await updateMedicalRecord()
     // await getVeterinarianById()

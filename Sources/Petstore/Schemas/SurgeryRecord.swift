@@ -1,16 +1,14 @@
 import Foundation
 
 public struct SurgeryRecord: Codable, Hashable, Sendable {
-    public let id: Int64?
     public let recordType: String = "surgery"
+    public let id: Int64?
     public let petId: Int64
     public let veterinarianId: Int64
     public let createdAt: Date
     public let updatedAt: Date?
     public let urgencyLevel: UrgencyLevel?
     public let notes: String?
-
-    // Surgery-specific fields
     public let procedureName: String
     public let surgeryDate: Date
     public let anesthesiaUsed: String?
@@ -49,8 +47,8 @@ public struct SurgeryRecord: Codable, Hashable, Sendable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id
         case recordType = "record_type"
+        case id
         case petId = "pet_id"
         case veterinarianId = "veterinarian_id"
         case createdAt = "created_at"

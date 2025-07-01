@@ -14,7 +14,6 @@ func createMedicalRecord() async {
         vaccineName: "Rabies",
         vaccinationDate: Date(),
         nextDueDate: Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date(),
-        batchNumber: "VAC-2024-001",
         vaccinationSite: "Left shoulder"
     )
 
@@ -46,7 +45,7 @@ func getMedicalRecordsByPetId() async {
 func updateMedicalRecord() async {
     print("\n=== Updating Medical Record ===")
 
-    // Example checkup record
+    // Example checkup record with simple union test result
     let checkupRecord = CheckupRecord(
         id: 1001,
         petId: 1,
@@ -59,7 +58,8 @@ func updateMedicalRecord() async {
         temperatureCelsius: 38.5,
         heartRateBpm: 120,
         followUpRequired: false,
-        examinationFindings: "Healthy, good body condition"
+        examinationFindings: "Healthy, good body condition",
+        primaryTestResult: .number(95.5)
     )
 
     let medicalRecord = MedicalRecord.checkup(checkupRecord)
@@ -136,74 +136,52 @@ func getAppointmentById() async {
     }
 }
 
-// MARK: - Complex Type Examples
 
-func demonstrateComplexTypes() async {
-    print("\n=== Demonstrating Complex Types ===")
 
-    // Demonstrate snake_case field handling
-    let medication = Medication(
-        medicationName: "Amoxicillin",
-        dosage: "250mg",
-        frequency: "Twice daily",
-        administrationMethod: "Oral",
-        specialInstructions: "Give with food"
-    )
-
-    print("📝 Medication: \(medication.medicationName)")
-    print("   Dosage: \(medication.dosage)")
-    print("   Frequency: \(medication.frequency)")
-
-    // Demonstrate simple unions
-    let contactMethods: [ContactMethod] = [.phone, .email, .both]
-    print("📞 Contact methods: \(contactMethods)")
-
-    let appointmentStatuses: [AppointmentStatus] = [
-        .scheduled, .confirmed, .inProgress, .completed,
+func demonstrateSimpleUnion() async {
+    print("\n=== Simple Union Demo (string | number | boolean) ===")
+    
+    // Create checkup records with different test result types
+    let checkups = [
+        CheckupRecord(
+            petId: 1,
+            veterinarianId: 501,
+            createdAt: Date(),
+            followUpRequired: false,
+            examinationFindings: "Blood type test",
+            primaryTestResult: .string("O negative")  // string result
+        ),
+        CheckupRecord(
+            petId: 2,
+            veterinarianId: 501,
+            createdAt: Date(),
+            followUpRequired: false,
+            examinationFindings: "Blood glucose test",
+            primaryTestResult: .number(95.5)  // number result
+        ),
+        CheckupRecord(
+            petId: 3,
+            veterinarianId: 501,
+            createdAt: Date(),
+            followUpRequired: true,
+            examinationFindings: "Pregnancy test",
+            primaryTestResult: .boolean(false)  // boolean result
+        )
     ]
-    print("📅 Appointment statuses: \(appointmentStatuses)")
-
-    let urgencyLevels: [UrgencyLevel] = [.routine, .urgent, .emergency]
-    print("🚨 Urgency levels: \(urgencyLevels)")
-    print("   Raw values: \(urgencyLevels.map { $0.rawValue })")
-
-    // Demonstrate discriminated union
-    print("\n📋 Discriminated Union Examples:")
-
-    let vaccination = VaccinationRecord(
-        petId: 1,
-        veterinarianId: 501,
-        createdAt: Date(),
-        vaccineName: "DHPP",
-        vaccinationDate: Date(),
-        nextDueDate: Calendar.current.date(byAdding: .year, value: 1, to: Date()) ?? Date(),
-        batchNumber: "VAC-2024-002"
-    )
-
-    let surgery = SurgeryRecord(
-        petId: 1,
-        veterinarianId: 501,
-        createdAt: Date(),
-        procedureName: "Spay surgery",
-        surgeryDate: Date(),
-        anesthesiaUsed: "Isoflurane",
-        surgeryDurationMinutes: 45,
-        recoveryNotes: "Patient recovered well"
-    )
-
-    let records: [MedicalRecord] = [
-        .vaccination(vaccination),
-        .surgery(surgery),
-    ]
-
-    for record in records {
-        switch record {
-        case .vaccination(let vac):
-            print("   💉 Vaccination: \(vac.vaccineName)")
-        case .checkup(let checkup):
-            print("   🔍 Checkup: \(checkup.examinationFindings ?? "No findings")")
-        case .surgery(let surg):
-            print("   🏥 Surgery: \(surg.procedureName)")
+    
+    print("🧪 CheckupRecord with Simple Union test results:")
+    for (index, checkup) in checkups.enumerated() {
+        print("   Checkup \(index + 1): \(checkup.examinationFindings ?? "Unknown test")")
+        
+        if let testResult = checkup.primaryTestResult {
+            switch testResult {
+            case .string(let value):
+                print("      Result: \"\(value)\" (string)")
+            case .number(let value):
+                print("      Result: \(value) (number)")
+            case .boolean(let value):
+                print("      Result: \(value) (boolean)")
+            }
         }
     }
 }

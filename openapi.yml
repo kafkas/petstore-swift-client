@@ -1001,23 +1001,29 @@ components:
         name: "##default"
     # The following types are custom additions for testing with more complex models and are not part of the original spec.
     MedicalRecord:
+      oneOf:
+        - $ref: "#/components/schemas/VaccinationRecord"
+        - $ref: "#/components/schemas/CheckupRecord"
+        - $ref: "#/components/schemas/SurgeryRecord"
+    VaccinationRecord:
       type: object
       required:
         - record_type
         - pet_id
         - veterinarian_id
         - created_at
+        - vaccine_name
+        - vaccination_date
+        - next_due_date
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 1001
         record_type:
           type: string
           enum:
             - vaccination
-            - checkup
-            - surgery
+        id:
+          type: integer
+          format: int64
+          example: 1001
         pet_id:
           type: integer
           format: int64
@@ -1039,86 +1045,137 @@ components:
         notes:
           type: string
           example: "Pet responded well to treatment"
-      discriminator:
-        propertyName: record_type
-        mapping:
-          vaccination: "#/components/schemas/VaccinationRecord"
-          checkup: "#/components/schemas/CheckupRecord"
-          surgery: "#/components/schemas/SurgeryRecord"
-      oneOf:
-        - $ref: "#/components/schemas/VaccinationRecord"
-        - $ref: "#/components/schemas/CheckupRecord"
-        - $ref: "#/components/schemas/SurgeryRecord"
-    VaccinationRecord:
-      allOf:
-        - $ref: "#/components/schemas/MedicalRecord"
-        - type: object
-          properties:
-            vaccine_name:
-              type: string
-              example: "Rabies"
-            vaccination_date:
-              type: string
-              format: date
-              example: "2024-01-15"
-            next_due_date:
-              type: string
-              format: date
-              example: "2025-01-15"
-            batch_number:
-              type: string
-              example: "VAC-2024-001"
-            vaccination_site:
-              type: string
-              example: "Left shoulder"
+        vaccine_name:
+          type: string
+          example: "Rabies"
+        vaccination_date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        next_due_date:
+          type: string
+          format: date
+          example: "2025-01-15"
+        vaccination_site:
+          type: string
+          example: "Left shoulder"
     CheckupRecord:
-      allOf:
-        - $ref: "#/components/schemas/MedicalRecord"
-        - type: object
-          properties:
-            weight_kg:
-              type: number
-              format: float
-              example: 25.5
-            temperature_celsius:
-              type: number
-              format: float
-              example: 38.5
-            heart_rate_bpm:
-              type: integer
-              example: 120
-            follow_up_required:
-              type: boolean
-              example: false
-            examination_findings:
-              type: string
-              example: "Healthy, good body condition"
+      type: object
+      required:
+        - record_type
+        - pet_id
+        - veterinarian_id
+        - created_at
+        - follow_up_required
+      properties:
+        record_type:
+          type: string
+          enum:
+            - checkup
+        id:
+          type: integer
+          format: int64
+          example: 1001
+        pet_id:
+          type: integer
+          format: int64
+          example: 10
+        veterinarian_id:
+          type: integer
+          format: int64
+          example: 501
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        urgency_level:
+          $ref: "#/components/schemas/UrgencyLevel"
+        notes:
+          type: string
+          example: "Pet responded well to treatment"
+        weight_kg:
+          type: number
+          format: float
+          example: 25.5
+        temperature_celsius:
+          type: number
+          format: float
+          example: 38.5
+        heart_rate_bpm:
+          type: integer
+          example: 120
+        follow_up_required:
+          type: boolean
+          example: false
+        examination_findings:
+          type: string
+          example: "Healthy, good body condition"
+        primary_test_result:
+          $ref: "#/components/schemas/TestResult"
     SurgeryRecord:
-      allOf:
-        - $ref: "#/components/schemas/MedicalRecord"
-        - type: object
-          properties:
-            procedure_name:
-              type: string
-              example: "Spay surgery"
-            surgery_date:
-              type: string
-              format: date-time
-              example: "2024-01-15T09:00:00Z"
-            anesthesia_used:
-              type: string
-              example: "Isoflurane"
-            surgery_duration_minutes:
-              type: integer
-              example: 45
-            recovery_notes:
-              type: string
-              example: "Patient recovered well, eating normally"
-            post_op_medications:
-              type: array
-              items:
-                type: string
-              example: ["Pain medication", "Antibiotics"]
+      type: object
+      required:
+        - record_type
+        - pet_id
+        - veterinarian_id
+        - created_at
+        - procedure_name
+        - surgery_date
+      properties:
+        record_type:
+          type: string
+          enum:
+            - surgery
+        id:
+          type: integer
+          format: int64
+          example: 1001
+        pet_id:
+          type: integer
+          format: int64
+          example: 10
+        veterinarian_id:
+          type: integer
+          format: int64
+          example: 501
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        urgency_level:
+          $ref: "#/components/schemas/UrgencyLevel"
+        notes:
+          type: string
+          example: "Pet responded well to treatment"
+        procedure_name:
+          type: string
+          example: "Spay surgery"
+        surgery_date:
+          type: string
+          format: date-time
+          example: "2024-01-15T09:00:00Z"
+        anesthesia_used:
+          type: string
+          example: "Isoflurane"
+        surgery_duration_minutes:
+          type: integer
+          example: 45
+        recovery_notes:
+          type: string
+          example: "Patient recovered well, eating normally"
+        post_op_medications:
+          type: array
+          items:
+            type: string
+          example: ["Pain medication", "Antibiotics"]
     Medication:
       type: object
       required:
@@ -1252,6 +1309,15 @@ components:
         - 2
         - 3
       example: 1
+    TestResult:
+      oneOf:
+        - type: string
+          example: "A positive"
+        - type: number
+          example: 95.5
+        - type: boolean
+          example: true
+
 
   requestBodies:
     Pet:

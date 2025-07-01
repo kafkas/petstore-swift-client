@@ -8,17 +8,13 @@ public enum MedicalRecord: Codable, Hashable, Sendable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let recordType = try container.decode(String.self, forKey: .recordType)
-
         switch recordType {
         case "vaccination":
-            let record = try VaccinationRecord.init(from: decoder)
-            self = .vaccination(record)
+            self = .vaccination(try VaccinationRecord(from: decoder))
         case "checkup":
-            let record = try CheckupRecord.init(from: decoder)
-            self = .checkup(record)
+            self = .checkup(try CheckupRecord(from: decoder))
         case "surgery":
-            let record = try SurgeryRecord.init(from: decoder)
-            self = .surgery(record)
+            self = .surgery(try SurgeryRecord(from: decoder))
         default:
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -31,16 +27,16 @@ public enum MedicalRecord: Codable, Hashable, Sendable {
 
     public func encode(to encoder: Encoder) throws {
         switch self {
-        case .vaccination(let record):
-            try record.encode(to: encoder)
-        case .checkup(let record):
-            try record.encode(to: encoder)
-        case .surgery(let record):
-            try record.encode(to: encoder)
+        case .vaccination(let data):
+            try data.encode(to: encoder)
+        case .checkup(let data):
+            try data.encode(to: encoder)
+        case .surgery(let data):
+            try data.encode(to: encoder)
         }
     }
 
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case recordType = "record_type"
     }
 }

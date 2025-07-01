@@ -1,20 +1,17 @@
 import Foundation
 
 public struct VaccinationRecord: Codable, Hashable, Sendable {
-    public let id: Int64?
     public let recordType: String = "vaccination"
+    public let id: Int64?
     public let petId: Int64
     public let veterinarianId: Int64
     public let createdAt: Date
     public let updatedAt: Date?
     public let urgencyLevel: UrgencyLevel?
     public let notes: String?
-
-    // Vaccination-specific fields
     public let vaccineName: String
     public let vaccinationDate: Date
     public let nextDueDate: Date
-    public let batchNumber: String
     public let vaccinationSite: String?
 
     public init(
@@ -28,7 +25,6 @@ public struct VaccinationRecord: Codable, Hashable, Sendable {
         vaccineName: String,
         vaccinationDate: Date,
         nextDueDate: Date,
-        batchNumber: String,
         vaccinationSite: String? = nil
     ) {
         self.id = id
@@ -41,13 +37,12 @@ public struct VaccinationRecord: Codable, Hashable, Sendable {
         self.vaccineName = vaccineName
         self.vaccinationDate = vaccinationDate
         self.nextDueDate = nextDueDate
-        self.batchNumber = batchNumber
         self.vaccinationSite = vaccinationSite
     }
 
     enum CodingKeys: String, CodingKey {
-        case id
         case recordType = "record_type"
+        case id
         case petId = "pet_id"
         case veterinarianId = "veterinarian_id"
         case createdAt = "created_at"
@@ -57,7 +52,6 @@ public struct VaccinationRecord: Codable, Hashable, Sendable {
         case vaccineName = "vaccine_name"
         case vaccinationDate = "vaccination_date"
         case nextDueDate = "next_due_date"
-        case batchNumber = "batch_number"
         case vaccinationSite = "vaccination_site"
     }
 }

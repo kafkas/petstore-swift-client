@@ -1,21 +1,20 @@
 import Foundation
 
 public struct CheckupRecord: Codable, Hashable, Sendable {
-    public let id: Int64?
     public let recordType: String = "checkup"
+    public let id: Int64?
     public let petId: Int64
     public let veterinarianId: Int64
     public let createdAt: Date
     public let updatedAt: Date?
     public let urgencyLevel: UrgencyLevel?
     public let notes: String?
-
-    // Checkup-specific fields
     public let weightKg: Double?
     public let temperatureCelsius: Double?
     public let heartRateBpm: Int?
     public let followUpRequired: Bool
     public let examinationFindings: String?
+    public let primaryTestResult: TestResult?
 
     public init(
         id: Int64? = nil,
@@ -29,7 +28,8 @@ public struct CheckupRecord: Codable, Hashable, Sendable {
         temperatureCelsius: Double? = nil,
         heartRateBpm: Int? = nil,
         followUpRequired: Bool,
-        examinationFindings: String? = nil
+        examinationFindings: String? = nil,
+        primaryTestResult: TestResult? = nil
     ) {
         self.id = id
         self.petId = petId
@@ -43,11 +43,12 @@ public struct CheckupRecord: Codable, Hashable, Sendable {
         self.heartRateBpm = heartRateBpm
         self.followUpRequired = followUpRequired
         self.examinationFindings = examinationFindings
+        self.primaryTestResult = primaryTestResult
     }
 
     enum CodingKeys: String, CodingKey {
-        case id
         case recordType = "record_type"
+        case id
         case petId = "pet_id"
         case veterinarianId = "veterinarian_id"
         case createdAt = "created_at"
@@ -59,5 +60,6 @@ public struct CheckupRecord: Codable, Hashable, Sendable {
         case heartRateBpm = "heart_rate_bpm"
         case followUpRequired = "follow_up_required"
         case examinationFindings = "examination_findings"
+        case primaryTestResult = "primary_test_result"
     }
 }
