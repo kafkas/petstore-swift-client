@@ -18,7 +18,7 @@ struct HTTPClient: Sendable {
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
     ) async throws -> T {
-        let requestBody: HTTP.RequestBody? = requestBody.map { .encodable($0) }
+        let requestBody: HTTP.RequestBody? = requestBody.map { .jsonEncodable($0) }
 
         let request = buildRequest(
             method: method,
@@ -60,7 +60,7 @@ struct HTTPClient: Sendable {
         body requestBody: (any Encodable)? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
-        let requestBody: HTTP.RequestBody? = requestBody.map { .encodable($0) }
+        let requestBody: HTTP.RequestBody? = requestBody.map { .jsonEncodable($0) }
 
         let request = buildRequest(
             method: method,
@@ -203,7 +203,7 @@ struct HTTPClient: Sendable {
         requestOptions: RequestOptions? = nil
     ) -> Data {
         switch requestBody {
-        case .encodable(let encodableBody):
+        case .jsonEncodable(let encodableBody):
             do {
                 // TODO: Merge requestOptions.additionalBodyParameters into this
                 return try jsonEncoder.encode(encodableBody)
