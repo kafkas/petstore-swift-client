@@ -1,5 +1,3 @@
-import Foundation
-
 public enum MedicalRecord: Codable, Hashable, Sendable {
     case vaccination(VaccinationRecord)
     case checkup(CheckupRecord)

@@ -1,5 +1,3 @@
-import Foundation
-
 struct FindPetsByStatus {
     struct QueryParams: Sendable, QueryParameterConvertible {
         /// Status values that need to be considered for filter

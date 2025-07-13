@@ -1,5 +1,3 @@
-import Foundation
-
 struct Serde {
     static var jsonEncoder: JSONEncoder {
         let encoder = JSONEncoder()

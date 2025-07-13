@@ -1,5 +1,3 @@
-import Foundation
-
 public struct ClientConfig: Sendable {
     struct Defaults {
         static let timeout: Int = 60

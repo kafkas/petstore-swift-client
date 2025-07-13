@@ -1,5 +1,3 @@
-import Foundation
-
 /// Veterinary and medical records for pets
 public struct VeterinaryClient: Sendable {
     private let httpClient: HTTPClient

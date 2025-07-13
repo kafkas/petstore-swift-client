@@ -1,5 +1,3 @@
-import Foundation
-
 struct HTTP {
     enum Method: String, CaseIterable {
         case get = "GET"

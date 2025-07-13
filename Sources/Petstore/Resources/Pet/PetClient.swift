@@ -1,5 +1,3 @@
-import Foundation
-
 /// Everything about your Pets
 public struct PetClient: Sendable {
     private let httpClient: HTTPClient

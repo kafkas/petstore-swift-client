@@ -1,5 +1,3 @@
-import Foundation
-
 // MARK: - Generic Error Response Structure
 public struct APIErrorResponse: Codable, Sendable {
     public let code: Int

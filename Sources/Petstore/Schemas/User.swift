@@ -1,5 +1,3 @@
-import Foundation
-
 public struct User: Codable, Hashable, Sendable {
     public let id: Int64?
     public let username: String?

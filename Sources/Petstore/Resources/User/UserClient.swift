@@ -1,5 +1,3 @@
-import Foundation
-
 /// Operations about user
 public struct UserClient: Sendable {
     private let httpClient: HTTPClient
@@ -11,7 +9,8 @@ public struct UserClient: Sendable {
     /// Create user.
     ///
     /// This can only be done by the logged in user.
-    public func createUser(request: User, requestOptions: RequestOptions? = nil) async throws -> User
+    public func createUser(request: User, requestOptions: RequestOptions? = nil) async throws
+        -> User
     {
         return try await httpClient.performRequest(
             method: .post,

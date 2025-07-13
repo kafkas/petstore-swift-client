@@ -1,5 +1,3 @@
-import Foundation
-
 struct HTTPClient: Sendable {
     private let clientConfig: ClientConfig
     private let jsonEncoder = Serde.jsonEncoder

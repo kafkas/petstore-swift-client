@@ -1,5 +1,3 @@
-import Foundation
-
 public struct VaccinationRecord: Codable, Hashable, Sendable {
     public let recordType: String = "vaccination"
     public let id: Int64?

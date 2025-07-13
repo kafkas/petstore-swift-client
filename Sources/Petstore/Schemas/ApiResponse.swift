@@ -1,10 +1,8 @@
-import Foundation
-
 public struct ApiResponse: Codable, Hashable, Sendable {
     public let code: Int32?
     public let type: String?
     public let message: String?
-    
+
     public init(
         code: Int32? = nil,
         type: String? = nil,
@@ -14,4 +12,4 @@ public struct ApiResponse: Codable, Hashable, Sendable {
         self.type = type
         self.message = message
     }
-} 
+}

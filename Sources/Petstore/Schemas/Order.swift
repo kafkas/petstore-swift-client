@@ -1,5 +1,3 @@
-import Foundation
-
 public struct Order: Codable, Hashable, Sendable {
     public let id: Int64?
     public let petId: Int64?

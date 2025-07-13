@@ -1,5 +1,3 @@
-import Foundation
-
 protocol QueryParameterConvertible {
     func toDictionary() -> [String: String]
 }
