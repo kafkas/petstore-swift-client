@@ -1198,8 +1198,6 @@ components:
         special_instructions:
           type: string
           example: "Give with food"
-      additionalProperties:
-        type: string
     VeterinarianInfo:
       type: object
       required:
@@ -1242,6 +1240,8 @@ components:
         emergency_contact_available:
           type: boolean
           example: true
+      additionalProperties:
+        type: string
     Appointment:
       type: object
       required:
