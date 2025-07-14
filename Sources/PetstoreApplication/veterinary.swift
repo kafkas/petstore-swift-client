@@ -113,14 +113,7 @@ func getVeterinarianById() async {
     do {
         let vet = try await client.veterinary.getVeterinarianById(vetId: 501)
         print("✅ Veterinarian found")
-        print("Dr. \(vet.firstName) \(vet.lastName)")
-        print("License: \(vet.licenseNumber)")
-        if let specialization = vet.specialization {
-            print("Specialization: \(specialization)")
-        }
-        if let clinic = vet.clinicName {
-            print("Clinic: \(clinic)")
-        }
+        print(vet)
     } catch {
         print("❌ Error getting veterinarian: \(error)")
     }
