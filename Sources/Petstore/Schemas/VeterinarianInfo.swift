@@ -10,6 +10,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
     public let phoneNumber: String?
     public let emailAddress: String?
     public let emergencyContactAvailable: Bool?
+    public let additionalProperties: [String: String]
 
     public init(
         id: Int64,
@@ -22,7 +23,8 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         contactMethod: ContactMethod? = nil,
         phoneNumber: String? = nil,
         emailAddress: String? = nil,
-        emergencyContactAvailable: Bool? = nil
+        emergencyContactAvailable: Bool? = nil,
+        additionalProperties: [String: String] = .init()
     ) {
         self.id = id
         self.firstName = firstName
@@ -35,6 +37,37 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         self.phoneNumber = phoneNumber
         self.emailAddress = emailAddress
         self.emergencyContactAvailable = emergencyContactAvailable
+        self.additionalProperties = additionalProperties
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int64.self, forKey: .id)
+        self.firstName = try container.decode(String.self, forKey: .firstName)
+        self.lastName = try container.decode(String.self, forKey: .lastName)
+        self.licenseNumber = try container.decode(String.self, forKey: .licenseNumber)
+        self.specialization = try container.decodeIfPresent(String.self, forKey: .specialization)
+        self.yearsExperience = try container.decodeIfPresent(Int.self, forKey: .yearsExperience)
+        self.clinicName = try container.decodeIfPresent(String.self, forKey: .clinicName)
+        self.contactMethod = try container.decodeIfPresent(
+            ContactMethod.self, forKey: .contactMethod)
+        self.phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+        self.emailAddress = try container.decodeIfPresent(String.self, forKey: .emailAddress)
+        self.emergencyContactAvailable = try container.decodeIfPresent(
+            Bool.self, forKey: .emergencyContactAvailable)
+        self.additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: [
+            "id",
+            "first_name",
+            "last_name",
+            "license_number",
+            "specialization",
+            "years_experience",
+            "clinic_name",
+            "contact_method",
+            "phone_number",
+            "email_address",
+            "emergency_contact_available",
+        ])
     }
 
     enum CodingKeys: String, CodingKey {
