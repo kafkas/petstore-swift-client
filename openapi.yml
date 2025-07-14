@@ -769,6 +769,35 @@ paths:
           description: Unexpected error
       security:
         - api_key: []
+  /veterinary/veterinarians:
+    post:
+      tags:
+        - veterinary
+      summary: Create veterinarian information
+      description: Create a new veterinarian profile
+      operationId: createVeterinarianInfo
+      requestBody:
+        description: Veterinarian information to create
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VeterinarianInfo"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VeterinarianInfo"
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
   /veterinary/veterinarians/{vetId}:
     get:
       tags:

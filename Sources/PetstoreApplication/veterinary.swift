@@ -73,6 +73,40 @@ func updateMedicalRecord() async {
     }
 }
 
+func createVeterinarianInfo() async {
+    print("\n=== Creating Veterinarian Information ===")
+
+    let veterinarianInfo = VeterinarianInfo(
+        id: 502,
+        firstName: "Dr. Emily",
+        lastName: "Wilson",
+        licenseNumber: "VET-2024-002",
+        specialization: "Exotic Animal Medicine",
+        yearsExperience: 8,
+        clinicName: "Paws & Claws Veterinary Hospital",
+        contactMethod: .both,
+        phoneNumber: "+1-555-987-6543",
+        emailAddress: "dr.wilson@pawsclaws.com",
+        emergencyContactAvailable: true,
+    )
+
+    do {
+        let result = try await client.veterinary.createVeterinarianInfo(request: veterinarianInfo)
+        print("✅ Veterinarian information created successfully")
+        print("Dr. \(result.firstName) \(result.lastName)")
+        print("License: \(result.licenseNumber)")
+        print("ID: \(result.id)")
+        if let specialization = result.specialization {
+            print("Specialization: \(specialization)")
+        }
+        if let clinic = result.clinicName {
+            print("Clinic: \(clinic)")
+        }
+    } catch {
+        print("❌ Error creating veterinarian information: \(error)")
+    }
+}
+
 func getVeterinarianById() async {
     print("\n=== Getting Veterinarian Information ===")
 

@@ -52,6 +52,21 @@ public struct VeterinaryClient: Sendable {
         )
     }
 
+    /// Create veterinarian information
+    ///
+    /// Create a new veterinarian profile
+    public func createVeterinarianInfo(request: VeterinarianInfo, requestOptions: RequestOptions? = nil)
+        async throws -> VeterinarianInfo
+    {
+        return try await httpClient.performRequest(
+            method: .post,
+            path: "/veterinary/veterinarians",
+            body: request,
+            requestOptions: requestOptions,
+            responseType: VeterinarianInfo.self
+        )
+    }
+
     /// Get veterinarian information
     ///
     /// Retrieve information about a specific veterinarian

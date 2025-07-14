@@ -33,9 +33,10 @@ Task {
     // await deleteUser()
 
     // // Veterinary methods
-    await createMedicalRecord()
+    // await createMedicalRecord()
     // await getMedicalRecordsByPetId()
     // await updateMedicalRecord()
+    await createVeterinarianInfo()
     // await getVeterinarianById()
     // await scheduleAppointment()
     // await getAppointmentById()
