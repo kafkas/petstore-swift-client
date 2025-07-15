@@ -70,6 +70,23 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         ])
     }
 
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.firstName, forKey: .firstName)
+        try container.encode(self.lastName, forKey: .lastName)
+        try container.encode(self.licenseNumber, forKey: .licenseNumber)
+        try container.encodeIfPresent(self.specialization, forKey: .specialization)
+        try container.encodeIfPresent(self.yearsExperience, forKey: .yearsExperience)
+        try container.encodeIfPresent(self.clinicName, forKey: .clinicName)
+        try container.encodeIfPresent(self.contactMethod, forKey: .contactMethod)
+        try container.encodeIfPresent(self.phoneNumber, forKey: .phoneNumber)
+        try container.encodeIfPresent(self.emailAddress, forKey: .emailAddress)
+        try container.encodeIfPresent(
+            self.emergencyContactAvailable, forKey: .emergencyContactAvailable)
+        try encoder.encodeAdditionalProperties(additionalProperties)
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case firstName = "first_name"

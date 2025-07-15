@@ -65,7 +65,8 @@ func updateMedicalRecord() async {
     let medicalRecord = MedicalRecord.checkup(checkupRecord)
 
     do {
-        let result = try await client.veterinary.updateMedicalRecord(recordId: 1001, request: medicalRecord)
+        let result = try await client.veterinary.updateMedicalRecord(
+            recordId: 1001, request: medicalRecord)
         print("✅ Medical record updated successfully")
         print("Updated record: \(result)")
     } catch {
@@ -88,6 +89,11 @@ func createVeterinarianInfo() async {
         phoneNumber: "+1-555-987-6543",
         emailAddress: "dr.wilson@pawsclaws.com",
         emergencyContactAvailable: true,
+        additionalProperties: [
+            "meta_field_1": "abc1",
+            "metaField2": "abc2",
+            "metaField3": "abc3"
+        ]
     )
 
     do {
@@ -163,11 +169,9 @@ func getAppointmentById() async {
     }
 }
 
-
-
 func demonstrateSimpleUnion() async {
     print("\n=== Simple Union Demo (string | number | boolean) ===")
-    
+
     // Create checkup records with different test result types
     let checkups = [
         CheckupRecord(
@@ -193,13 +197,13 @@ func demonstrateSimpleUnion() async {
             followUpRequired: true,
             examinationFindings: "Pregnancy test",
             primaryTestResult: .boolean(false)  // boolean result
-        )
+        ),
     ]
-    
+
     print("🧪 CheckupRecord with Simple Union test results:")
     for (index, checkup) in checkups.enumerated() {
         print("   Checkup \(index + 1): \(checkup.examinationFindings ?? "Unknown test")")
-        
+
         if let testResult = checkup.primaryTestResult {
             switch testResult {
             case .string(let value):
