@@ -1,14 +1,3 @@
-private struct StringKey: CodingKey, Hashable {
-    var stringValue: String
-    var intValue: Int? { Int(stringValue) }
-
-    init(_ string: String) { self.stringValue = string }
-
-    init?(stringValue: String) { self.stringValue = stringValue }
-
-    init?(intValue: Int) { self.stringValue = String(intValue) }
-}
-
 extension Decoder {
     public func decodeAdditionalProperties<T: Decodable>(knownKeys: Set<String>) throws -> [String:
         T]
