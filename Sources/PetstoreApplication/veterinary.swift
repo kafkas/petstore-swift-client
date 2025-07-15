@@ -77,24 +77,72 @@ func updateMedicalRecord() async {
 func createVeterinarianInfo() async {
     print("\n=== Creating Veterinarian Information ===")
 
+    print("Creating veterinarian info...")
     let veterinarianInfo = VeterinarianInfo(
-        id: 502,
-        firstName: "Dr. Emily",
+        id: 1,
+        firstName: "Dr. Sarah",
         lastName: "Wilson",
-        licenseNumber: "VET-2024-002",
-        specialization: "Exotic Animal Medicine",
+        licenseNumber: "VET12345",
+        specialization: "Small Animal Medicine",
         yearsExperience: 8,
-        clinicName: "Paws & Claws Veterinary Hospital",
-        contactMethod: .both,
-        phoneNumber: "+1-555-987-6543",
+        clinicName: "Paws & Claws Veterinary Clinic",
+        contactMethod: .email,
+        phoneNumber: "555-123-4567",
         emailAddress: "dr.wilson@pawsclaws.com",
         emergencyContactAvailable: true,
+        // additionalProperties: [
+        //     "meta_field_1": JSONValue("abc1"),
+        //     "metaField2": JSONValue("abc2"),
+        //     "metaField3": JSONValue("abc3"),
+        // ],
         additionalProperties: [
-            "meta_field_1": "abc1",
-            "metaField2": "abc2",
-            "metaField3": "abc3"
+            "certification_score": JSONValue(95.5),  // Double
+            "is_board_certified": JSONValue(true),  // Bool
+            "patient_count": JSONValue(150),  // Int
+            "specialties": JSONValue([  // Array
+                JSONValue("Birds"),
+                JSONValue("Reptiles"),
+                JSONValue("Small Mammals"),
+            ]),
+            "clinic_info": JSONValue([  // Object
+                "address": JSONValue("123 Pet Street"),
+                "city": JSONValue("Pettown"),
+                "zip_code": JSONValue("12345"),
+            ]),
+            "notes": JSONValue("Very experienced with exotic species"),  // String
         ]
     )
+
+    // // Example demonstrating different JSON value types in additionalProperties
+    // let veterinarianInfoWithMixedTypes = VeterinarianInfo(
+    //     id: 2,
+    //     firstName: "Dr. John",
+    //     lastName: "Smith",
+    //     licenseNumber: "VET67890",
+    //     specialization: "Exotic Animals",
+    //     yearsExperience: 12,
+    //     clinicName: "Exotic Pet Care Center",
+    //     contactMethod: .phone,
+    //     phoneNumber: "555-987-6543",
+    //     emailAddress: "dr.smith@exoticpets.com",
+    //     emergencyContactAvailable: false,
+    //     additionalProperties: [
+    //         "certification_score": JSONValue(95.5),           // Double
+    //         "is_board_certified": JSONValue(true),            // Bool
+    //         "patient_count": JSONValue(150),                  // Int
+    //         "specialties": JSONValue([                        // Array
+    //             JSONValue("Birds"),
+    //             JSONValue("Reptiles"),
+    //             JSONValue("Small Mammals")
+    //         ]),
+    //         "clinic_info": JSONValue([                        // Object
+    //             "address": JSONValue("123 Pet Street"),
+    //             "city": JSONValue("Pettown"),
+    //             "zip_code": JSONValue("12345")
+    //         ]),
+    //         "notes": JSONValue("Very experienced with exotic species")  // String
+    //     ]
+    // )
 
     do {
         let result = try await client.veterinary.createVeterinarianInfo(request: veterinarianInfo)

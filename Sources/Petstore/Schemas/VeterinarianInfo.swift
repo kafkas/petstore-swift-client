@@ -10,7 +10,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
     public let phoneNumber: String?
     public let emailAddress: String?
     public let emergencyContactAvailable: Bool?
-    public let additionalProperties: [String: String]
+    public let additionalProperties: [String: JSONValue]
 
     public init(
         id: Int64,
@@ -24,7 +24,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         phoneNumber: String? = nil,
         emailAddress: String? = nil,
         emergencyContactAvailable: Bool? = nil,
-        additionalProperties: [String: String] = .init()
+        additionalProperties: [String: JSONValue] = .init()
     ) {
         self.id = id
         self.firstName = firstName
