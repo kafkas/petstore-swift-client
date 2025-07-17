@@ -70,7 +70,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         ])
     }
 
-    public func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws -> Void {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.id, forKey: .id)
         try container.encode(self.firstName, forKey: .firstName)
