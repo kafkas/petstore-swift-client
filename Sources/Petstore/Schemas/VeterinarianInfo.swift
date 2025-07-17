@@ -72,7 +72,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         try container.encodeIfPresent(self.emailAddress, forKey: .emailAddress)
         try container.encodeIfPresent(
             self.emergencyContactAvailable, forKey: .emergencyContactAvailable)
-        try encoder.encodeAdditionalProperties(additionalProperties)
+        try encoder.encodeAdditionalProperties(self.additionalProperties)
     }
 
     enum CodingKeys: String, CodingKey, CaseIterable {
