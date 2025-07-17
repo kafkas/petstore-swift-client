@@ -60,6 +60,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
 
     public func encode(to encoder: Encoder) throws -> Void {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try encoder.encodeAdditionalProperties(self.additionalProperties)
         try container.encode(self.id, forKey: .id)
         try container.encode(self.firstName, forKey: .firstName)
         try container.encode(self.lastName, forKey: .lastName)
@@ -72,7 +73,6 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         try container.encodeIfPresent(self.emailAddress, forKey: .emailAddress)
         try container.encodeIfPresent(
             self.emergencyContactAvailable, forKey: .emergencyContactAvailable)
-        try encoder.encodeAdditionalProperties(self.additionalProperties)
     }
 
     enum CodingKeys: String, CodingKey, CaseIterable {
