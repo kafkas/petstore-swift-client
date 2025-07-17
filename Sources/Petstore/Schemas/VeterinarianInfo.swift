@@ -55,19 +55,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         self.emailAddress = try container.decodeIfPresent(String.self, forKey: .emailAddress)
         self.emergencyContactAvailable = try container.decodeIfPresent(
             Bool.self, forKey: .emergencyContactAvailable)
-        self.additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: [
-            "id",
-            "first_name",
-            "last_name",
-            "license_number",
-            "specialization",
-            "years_experience",
-            "clinic_name",
-            "contact_method",
-            "phone_number",
-            "email_address",
-            "emergency_contact_available",
-        ])
+        self.additionalProperties = try decoder.decodeAdditionalProperties(knownKeys: Set(CodingKeys.allCases.map(\.rawValue)))
     }
 
     public func encode(to encoder: Encoder) throws -> Void {
@@ -87,7 +75,7 @@ public struct VeterinarianInfo: Codable, Hashable, Sendable {
         try encoder.encodeAdditionalProperties(additionalProperties)
     }
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case id
         case firstName = "first_name"
         case lastName = "last_name"
