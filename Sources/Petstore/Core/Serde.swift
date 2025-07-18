@@ -1,4 +1,4 @@
-struct Serde {
+final class Serde {
     static var jsonEncoder: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601

@@ -8,7 +8,7 @@ public struct Pet: Codable, Hashable, Sendable {
     public let status: Status?
 
     /// pet status in the store
-    public enum Status: String, Codable, Hashable, Sendable, CaseIterable {
+    public enum Status: String, Codable, Hashable, CaseIterable, Sendable {
         case available = "available"
         case pending = "pending"
         case sold = "sold"

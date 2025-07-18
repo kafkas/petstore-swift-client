@@ -1,11 +1,14 @@
 extension Decoder {
-    public func decodeAdditionalProperties<T: Decodable, C: CaseIterable & RawRepresentable>(using codingKeysType: C.Type) throws
+    func decodeAdditionalProperties<T: Decodable, C: CaseIterable & RawRepresentable>(
+        using codingKeysType: C.Type
+    ) throws
         -> [String: T] where C.RawValue == String
     {
-        return try decodeAdditionalProperties(knownKeys: Set(codingKeysType.allCases.map(\.rawValue)))
+        return try decodeAdditionalProperties(
+            knownKeys: Set(codingKeysType.allCases.map(\.rawValue)))
     }
 
-    public func decodeAdditionalProperties<T: Decodable>(knownKeys: Set<String>) throws -> [String:
+    func decodeAdditionalProperties<T: Decodable>(knownKeys: Set<String>) throws -> [String:
         T]
     {
         let container = try container(keyedBy: StringKey.self)

@@ -1,6 +1,5 @@
 extension Encoder {
-    public func encodeAdditionalProperties<T: Encodable>(_ additionalProperties: [String: T]) throws
-    {
+    func encodeAdditionalProperties<T: Encodable>(_ additionalProperties: [String: T]) throws {
         guard !additionalProperties.isEmpty else { return }
         var container = self.container(keyedBy: StringKey.self)
         for (key, value) in additionalProperties {

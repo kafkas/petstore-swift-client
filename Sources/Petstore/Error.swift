@@ -11,7 +11,7 @@ public struct APIErrorResponse: Codable, Sendable {
     }
 }
 
-public enum PetstoreError: Error, LocalizedError {
+public enum PetstoreError: Error {
     // Network & Client Errors
     case invalidURL
     case encodingError(Error)

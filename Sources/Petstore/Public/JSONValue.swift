@@ -1,6 +1,6 @@
 import Foundation
 
-/// A type that can represent any JSON value
+/// A type that can represent any JSON value.
 public enum JSONValue: Codable, Hashable, Sendable {
     case string(String)
     case number(Double)

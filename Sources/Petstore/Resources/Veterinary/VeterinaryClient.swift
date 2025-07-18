@@ -1,5 +1,5 @@
 /// Veterinary and medical records for pets
-public struct VeterinaryClient: Sendable {
+public final class VeterinaryClient: Sendable {
     private let httpClient: HTTPClient
 
     public init(config: ClientConfig) {
@@ -55,7 +55,9 @@ public struct VeterinaryClient: Sendable {
     /// Create veterinarian information
     ///
     /// Create a new veterinarian profile
-    public func createVeterinarianInfo(request: VeterinarianInfo, requestOptions: RequestOptions? = nil)
+    public func createVeterinarianInfo(
+        request: VeterinarianInfo, requestOptions: RequestOptions? = nil
+    )
         async throws -> VeterinarianInfo
     {
         return try await httpClient.performRequest(

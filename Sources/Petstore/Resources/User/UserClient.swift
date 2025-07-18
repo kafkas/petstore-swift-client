@@ -1,5 +1,5 @@
 /// Operations about user
-public struct UserClient: Sendable {
+public final class UserClient: Sendable {
     private let httpClient: HTTPClient
 
     public init(config: ClientConfig) {

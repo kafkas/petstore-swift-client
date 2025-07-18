@@ -1,5 +1,5 @@
 struct FindPetsByStatus {
-    struct QueryParams: Sendable, QueryParameterConvertible {
+    struct QueryParams: QueryParameterConvertible {
         /// Status values that need to be considered for filter
         let status: String?
         let limit: Int?
@@ -14,7 +14,7 @@ struct FindPetsByStatus {
 }
 
 struct FindPetsByTags {
-    struct QueryParams: Sendable, QueryParameterConvertible {
+    struct QueryParams: QueryParameterConvertible {
         /// Tags to filter by
         let tags: [String]?
 
@@ -25,7 +25,7 @@ struct FindPetsByTags {
 }
 
 struct UpdatePetWithForm {
-    struct QueryParams: Sendable, QueryParameterConvertible {
+    struct QueryParams: QueryParameterConvertible {
         /// Name of pet that needs to be updated
         let name: String?
         /// Status of pet that needs to be updated
@@ -39,7 +39,7 @@ struct UpdatePetWithForm {
 }
 
 struct UploadFile {
-    struct QueryParams: Sendable, QueryParameterConvertible {
+    struct QueryParams: QueryParameterConvertible {
         /// Additional Metadata
         let additionalMetadata: String?
 
@@ -50,7 +50,7 @@ struct UploadFile {
 }
 
 struct LoginUser {
-    struct QueryParams: Sendable, QueryParameterConvertible {
+    struct QueryParams: QueryParameterConvertible {
         /// The user name for login
         let username: String?
         /// The password for login in clear text

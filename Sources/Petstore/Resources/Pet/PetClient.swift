@@ -1,5 +1,5 @@
 /// Everything about your Pets
-public struct PetClient: Sendable {
+public final class PetClient: Sendable {
     private let httpClient: HTTPClient
 
     public init(config: ClientConfig) {

@@ -1,4 +1,4 @@
-public enum AppointmentStatus: String, Codable, Hashable, Sendable, CaseIterable {
+public enum AppointmentStatus: String, Codable, Hashable, CaseIterable, Sendable {
     case scheduled = "scheduled"
     case confirmed = "confirmed"
     case inProgress = "in_progress"

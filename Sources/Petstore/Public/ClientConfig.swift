@@ -1,4 +1,4 @@
-public struct ClientConfig: Sendable {
+public final class ClientConfig: Sendable {
     struct Defaults {
         static let timeout: Int = 60
         static let maxRetries: Int = 2

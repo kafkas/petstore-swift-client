@@ -1,5 +1,5 @@
 /// Access to Petstore orders
-public struct StoreClient: Sendable {
+public final class StoreClient: Sendable {
     private let httpClient: HTTPClient
 
     public init(config: ClientConfig) {

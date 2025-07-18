@@ -28,13 +28,14 @@
 ///     maxRetries: 3,
 /// )
 /// ```
-public struct PetstoreClient: Sendable {
+public final class PetstoreClient: Sendable {
+    public let pet: PetClient
+    public let store: StoreClient
+    public let user: UserClient
+    public let veterinary: VeterinaryClient
+
     private let config: ClientConfig
 
-    public lazy var pet = PetClient(config: config)
-    public lazy var store = StoreClient(config: config)
-    public lazy var user = UserClient(config: config)
-    public lazy var veterinary = VeterinaryClient(config: config)
 
     public init(
         baseURL: String = PetstoreEnvironment.default.rawValue,
@@ -53,5 +54,9 @@ public struct PetstoreClient: Sendable {
             timeout: timeout,
             urlSession: urlSession
         )
+        self.pet = PetClient(config: self.config)
+        self.store = StoreClient(config: self.config)
+        self.user = UserClient(config: self.config)
+        self.veterinary = VeterinaryClient(config: self.config)
     }
 }
