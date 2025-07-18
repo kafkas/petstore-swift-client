@@ -258,6 +258,7 @@ final class HTTPClient: Sendable {
     private func handleErrorResponse(statusCode: Int, data: Data) throws {
         let errorResponse = parseErrorResponse(statusCode: statusCode, from: data)
 
+        // TODO: We should not refer to PetstoreError here since this is meant to be an "as is" file
         switch statusCode {
         case 400:
             throw PetstoreError.badRequest(errorResponse)
