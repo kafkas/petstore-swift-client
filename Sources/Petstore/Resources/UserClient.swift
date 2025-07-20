@@ -79,7 +79,7 @@ public final class UserClient: Sendable {
     {
         return try await httpClient.performRequest(
             method: .get,
-            path: "/user/\(username)",
+            path: "/user/\(username.urlPathEncoded())",
             requestOptions: requestOptions,
             responseType: User.self
         )
@@ -96,7 +96,7 @@ public final class UserClient: Sendable {
     {
         return try await httpClient.performRequest(
             method: .put,
-            path: "/user/\(username)",
+            path: "/user/\(username.urlPathEncoded())",
             body: request,
             requestOptions: requestOptions
         )
@@ -109,7 +109,7 @@ public final class UserClient: Sendable {
     public func deleteUser(username: String, requestOptions: RequestOptions? = nil) async throws {
         return try await httpClient.performRequest(
             method: .delete,
-            path: "/user/\(username)",
+            path: "/user/\(username.urlPathEncoded())",
             requestOptions: requestOptions
         )
     }
