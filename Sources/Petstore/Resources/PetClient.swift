@@ -57,15 +57,14 @@ public final class PetClient: Sendable {
         offset: Int? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> [Pet] {
-        let queryParams = FindPetsByStatus.QueryParams(
-            status: status,
-            limit: limit,
-            offset: offset
-        )
         return try await httpClient.performRequest(
             method: .get,
             path: "/pet/findByStatus",
-            queryParams: queryParams.toDictionary(),
+            queryParams: [
+                "status": status.map { .string($0) },
+                "limit": limit.map { .int($0) },
+                "offset": offset.map { .int($0) },
+            ],
             requestOptions: requestOptions,
             responseType: [Pet].self
         )
@@ -78,11 +77,12 @@ public final class PetClient: Sendable {
     public func findPetsByTags(tags: [String]? = nil, requestOptions: RequestOptions? = nil)
         async throws -> [Pet]
     {
-        let queryParams = FindPetsByTags.QueryParams(tags: tags)
         return try await httpClient.performRequest(
             method: .get,
             path: "/pet/findByTags",
-            queryParams: queryParams.toDictionary(),
+            queryParams: [
+                "tags": tags.map { .stringArray($0) },
+            ],
             requestOptions: requestOptions,
             responseType: [Pet].self
         )
@@ -115,11 +115,13 @@ public final class PetClient: Sendable {
         status: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> Pet {
-        let queryParams = UpdatePetWithForm.QueryParams(name: name, status: status)
         return try await httpClient.performRequest(
             method: .post,
             path: "/pet/\(petId)",
-            queryParams: queryParams.toDictionary(),
+            queryParams: [
+                "name": name.map { .string($0) },
+                "status": status.map { .string($0) },
+            ],
             requestOptions: requestOptions,
             responseType: Pet.self
         )
@@ -138,11 +140,12 @@ public final class PetClient: Sendable {
         additionalMetadata: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> ApiResponse {
-        let queryParams = UploadFile.QueryParams(additionalMetadata: additionalMetadata)
         return try await httpClient.performFileUpload(
             method: .post,
             path: "/pet/\(petId)/uploadImage",
-            queryParams: queryParams.toDictionary(),
+            queryParams: [
+                "additionalMetadata": additionalMetadata.map { .string($0) },
+            ],
             fileData: request,
             requestOptions: requestOptions,
             responseType: ApiResponse.self

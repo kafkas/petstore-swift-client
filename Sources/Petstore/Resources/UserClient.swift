@@ -47,11 +47,13 @@ public final class UserClient: Sendable {
         password: String? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws -> String {
-        let queryParams = LoginUser.QueryParams(username: username, password: password)
         return try await httpClient.performRequest(
             method: .get,
             path: "/user/login",
-            queryParams: queryParams.toDictionary(),
+            queryParams: [
+                "username": username.map { .string($0) },
+                "password": password.map { .string($0) },
+            ],
             requestOptions: requestOptions,
             responseType: String.self
         )

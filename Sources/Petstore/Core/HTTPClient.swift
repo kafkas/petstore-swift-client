@@ -11,7 +11,7 @@ final class HTTPClient: Sendable {
         method: HTTP.Method,
         path: String,
         headers requestHeaders: [String: String] = [:],
-        queryParams requestQueryParams: [String: String] = [:],
+        queryParams requestQueryParams: [String: QueryParameter?] = [:],
         body requestBody: (any Encodable)? = nil,
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
@@ -54,7 +54,7 @@ final class HTTPClient: Sendable {
         method: HTTP.Method,
         path: String,
         headers requestHeaders: [String: String] = [:],
-        queryParams requestQueryParams: [String: String] = [:],
+        queryParams requestQueryParams: [String: QueryParameter?] = [:],
         body requestBody: (any Encodable)? = nil,
         requestOptions: RequestOptions? = nil
     ) async throws {
@@ -76,7 +76,7 @@ final class HTTPClient: Sendable {
         method: HTTP.Method,
         path: String,
         headers requestHeaders: [String: String] = [:],
-        queryParams requestQueryParams: [String: String] = [:],
+        queryParams requestQueryParams: [String: QueryParameter?] = [:],
         fileData: Data,
         requestOptions: RequestOptions? = nil,
         responseType: T.Type
@@ -104,7 +104,7 @@ final class HTTPClient: Sendable {
         path: String,
         requestContentType: HTTP.ContentType,
         requestHeaders: [String: String],
-        requestQueryParams: [String: String],
+        requestQueryParams: [String: QueryParameter?],
         requestBody: HTTP.RequestBody? = nil,
         requestOptions: RequestOptions? = nil
     ) -> URLRequest {
@@ -144,7 +144,7 @@ final class HTTPClient: Sendable {
 
     private func buildRequestURL(
         path: String,
-        requestQueryParams: [String: String],
+        requestQueryParams: [String: QueryParameter?],
         requestOptions: RequestOptions? = nil
     ) -> URL {
         let endpointURL: String = "\(clientConfig.baseURL)\(path)"
@@ -156,7 +156,7 @@ final class HTTPClient: Sendable {
         }
         if !requestQueryParams.isEmpty {
             components.queryItems = requestQueryParams.map { key, value in
-                URLQueryItem(name: key, value: value)
+                URLQueryItem(name: key, value: value?.toString())
             }
         }
         if let additionalQueryParams = requestOptions?.additionalQueryParameters {
