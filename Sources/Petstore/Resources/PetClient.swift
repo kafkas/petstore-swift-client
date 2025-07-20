@@ -81,7 +81,7 @@ public final class PetClient: Sendable {
             method: .get,
             path: "/pet/findByTags",
             queryParams: [
-                "tags": tags.map { .stringArray($0) },
+                "tags": tags.map { .stringArray($0) }
             ],
             requestOptions: requestOptions,
             responseType: [Pet].self
@@ -144,7 +144,7 @@ public final class PetClient: Sendable {
             method: .post,
             path: "/pet/\(petId)/uploadImage",
             queryParams: [
-                "additionalMetadata": additionalMetadata.map { .string($0) },
+                "additionalMetadata": additionalMetadata.map { .string($0) }
             ],
             fileData: request,
             requestOptions: requestOptions,
