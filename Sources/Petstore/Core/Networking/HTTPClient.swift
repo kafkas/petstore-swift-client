@@ -136,7 +136,9 @@ final class HTTPClient: Sendable {
         // Set body
         if let requestBody = requestBody {
             request.httpBody = buildRequestBody(
-                requestBody: requestBody, requestOptions: requestOptions)
+                requestBody: requestBody,
+                requestOptions: requestOptions
+            )
         }
 
         return request
