@@ -2,6 +2,7 @@ enum QueryParameter {
     case string(String)
     case int(Int)
     case stringArray([String])
+    case uuid(UUID)
 
     func toString() -> String {
         switch self {
@@ -11,6 +12,8 @@ enum QueryParameter {
             return String(value)
         case .stringArray(let values):
             return values.joined(separator: ",")
+        case .uuid(let value):
+            return value.uuidString
         }
     }
 }
