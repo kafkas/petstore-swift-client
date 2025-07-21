@@ -3,7 +3,7 @@ enum QueryParameter {
     case int(Int)
     case stringArray([String])
 
-    func toString() -> String? {
+    func toString() -> String {
         switch self {
         case .string(let value):
             return value
