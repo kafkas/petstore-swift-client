@@ -36,9 +36,9 @@ Task {
     // await createMedicalRecord()
     // await getMedicalRecordsByPetId()
     // await updateMedicalRecord()
-    await createVeterinarianInfo()
+    // await createVeterinarianInfo()
     // await getVeterinarianById()
-    // await scheduleAppointment()
+    await scheduleAppointment()
     // await getAppointmentById()
 
     exit(0)

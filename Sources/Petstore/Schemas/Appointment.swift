@@ -1,5 +1,5 @@
 public struct Appointment: Codable, Hashable, Sendable {
-    public let id: Int64?
+    public let id: UUID?
     public let petId: Int64
     public let veterinarianId: Int64
     public let appointmentDate: Date
@@ -12,7 +12,7 @@ public struct Appointment: Codable, Hashable, Sendable {
     public let updatedAt: Date?
 
     public init(
-        id: Int64? = nil,
+        id: UUID? = nil,
         petId: Int64,
         veterinarianId: Int64,
         appointmentDate: Date,

@@ -191,7 +191,7 @@ func scheduleAppointment() async {
     do {
         let result = try await client.veterinary.scheduleAppointment(request: appointment)
         print("✅ Appointment scheduled successfully")
-        print("Appointment ID: \(result.id ?? 0)")
+        print("Appointment ID: \(result.id.map { $0.uuidString } ?? "No ID")")
         print("Date: \(result.appointmentDate)")
         print("Status: \(result.appointmentStatus)")
     } catch {
