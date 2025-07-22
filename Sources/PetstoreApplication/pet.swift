@@ -21,7 +21,7 @@ func addPet() async {
         print("Pet Status: \(createdPet.status?.rawValue ?? "unknown")")
     } catch {
         print("❌ Failed to process pet: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -47,7 +47,7 @@ func updatePet() async {
 
     } catch {
         print("❌ Failed to process pet: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -65,7 +65,7 @@ func findPetsByStatus() async {
         }
     } catch {
         print("❌ Failed to find pets: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -85,7 +85,7 @@ func findPetsByTags() async {
         }
     } catch {
         print("❌ Failed to find pets: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -102,7 +102,7 @@ func getPetById() async {
         print("Pet Status: \(pet.status?.rawValue ?? "unknown")")
     } catch {
         print("❌ Failed to get pet: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -123,7 +123,7 @@ func updatePetWithForm() async {
         print("Pet Status: \(updatedPet.status?.rawValue ?? "unknown")")
     } catch {
         print("❌ Failed to update pet with form: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -138,7 +138,7 @@ func deletePet() async {
 
     } catch {
         print("❌ Failed to process pet: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -164,7 +164,7 @@ func uploadFile() async {
 
     } catch {
         print("❌ Failed to upload file: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }

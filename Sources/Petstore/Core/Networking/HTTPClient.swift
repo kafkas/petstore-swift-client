@@ -39,14 +39,14 @@ final class HTTPClient: Sendable {
                 {
                     return string
                 }
-                throw PetstoreError.decodingError(error)
+                throw ClientError.decodingError(error)
             }
         }
 
         do {
             return try jsonDecoder.decode(responseType, from: data)
         } catch {
-            throw PetstoreError.decodingError(error)
+            throw ClientError.decodingError(error)
         }
     }
 
@@ -95,7 +95,7 @@ final class HTTPClient: Sendable {
         do {
             return try jsonDecoder.decode(responseType, from: data)
         } catch {
-            throw PetstoreError.decodingError(error)
+            throw ClientError.decodingError(error)
         }
     }
 
@@ -229,7 +229,7 @@ final class HTTPClient: Sendable {
             let (data, response) = try await clientConfig.urlSession.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw PetstoreError.invalidResponse
+                throw ClientError.invalidResponse
             }
 
             // Handle successful responses
@@ -249,10 +249,10 @@ final class HTTPClient: Sendable {
             return (data, contentType)
 
         } catch {
-            if error is PetstoreError {
+            if error is ClientError {
                 throw error
             } else {
-                throw PetstoreError.networkError(error)
+                throw ClientError.networkError(error)
             }
         }
     }
@@ -260,22 +260,22 @@ final class HTTPClient: Sendable {
     private func handleErrorResponse(statusCode: Int, data: Data) throws {
         let errorResponse = parseErrorResponse(statusCode: statusCode, from: data)
 
-        // TODO: We should not refer to PetstoreError here since this is meant to be an "as is" file
+        // TODO: We should not refer to ClientError here since this is meant to be an "as is" file
         switch statusCode {
         case 400:
-            throw PetstoreError.badRequest(errorResponse)
+            throw ClientError.badRequest(errorResponse)
         case 401:
-            throw PetstoreError.unauthorized(errorResponse)
+            throw ClientError.unauthorized(errorResponse)
         case 403:
-            throw PetstoreError.forbidden(errorResponse)
+            throw ClientError.forbidden(errorResponse)
         case 404:
-            throw PetstoreError.notFound(errorResponse)
+            throw ClientError.notFound(errorResponse)
         case 422:
-            throw PetstoreError.validationError(errorResponse)
+            throw ClientError.validationError(errorResponse)
         case 500...599:
-            throw PetstoreError.serverError(errorResponse)
+            throw ClientError.serverError(errorResponse)
         default:
-            throw PetstoreError.httpError(statusCode: statusCode, response: errorResponse)
+            throw ClientError.httpError(statusCode: statusCode, response: errorResponse)
         }
     }
 

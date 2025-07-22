@@ -1,4 +1,4 @@
-public enum PetstoreError: Error {
+public enum ClientError: Error {
     // Network & Client Errors
     case invalidURL
     case encodingError(Error)

@@ -18,7 +18,7 @@ func getInventory() async {
         print(inventory)
     } catch {
         print("❌ Failed to get inventory: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -33,7 +33,7 @@ func placeOrder() async {
         print(placedOrder)
     } catch {
         print("❌ Failed to place order: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -53,7 +53,7 @@ func getOrderById() async {
         print("Complete: \(order.complete ?? false)")
     } catch {
         print("❌ Failed to get order: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -67,7 +67,7 @@ func deleteOrder() async {
         print("✅ Order successfully deleted!")
     } catch {
         print("❌ Failed to delete order: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }

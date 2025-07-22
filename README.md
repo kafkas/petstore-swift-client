@@ -53,8 +53,6 @@ _SDK should gracefully handle server responses that don't match the OpenAPI spec
 
 ## TODOs
 
-- Make `Sources/PetstoreSDK/Core` static across all SDKs
-  - Don't reference `PetstoreError` in `HTTPClient`
 - Specify default values in model schemas?
 - Path/query params encoding
 - Specify user agent in transport layer

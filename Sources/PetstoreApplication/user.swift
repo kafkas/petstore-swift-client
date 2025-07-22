@@ -23,7 +23,7 @@ func createUser() async {
         print("Email: \(createdUser.email ?? "unknown")")
     } catch {
         print("❌ Failed to create user: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -45,7 +45,7 @@ func createUsersWithListInput() async {
         print("Result user: \(result.username ?? "unknown")")
     } catch {
         print("❌ Failed to create users: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -63,7 +63,7 @@ func loginUser() async {
         print("Session token: \(sessionToken)")
     } catch {
         print("❌ Failed to login user: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -77,7 +77,7 @@ func logoutUser() async {
         print("✅ User successfully logged out!")
     } catch {
         print("❌ Failed to logout user: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -96,7 +96,7 @@ func getUserByName() async {
         print("Email: \(user.email ?? "unknown")")
     } catch {
         print("❌ Failed to get user: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -120,7 +120,7 @@ func updateUser() async {
         print("✅ User successfully updated!")
     } catch {
         print("❌ Failed to update user: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
@@ -134,7 +134,7 @@ func deleteUser() async {
         print("✅ User successfully deleted!")
     } catch {
         print("❌ Failed to delete user: \(error.localizedDescription)")
-        if let petstoreError = error as? PetstoreError {
+        if let petstoreError = error as? ClientError {
             print("Error type: \(petstoreError)")
         }
     }
