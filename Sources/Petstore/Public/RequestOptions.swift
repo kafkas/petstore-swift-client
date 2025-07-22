@@ -20,7 +20,7 @@ public struct RequestOptions {
     /// Additional query parameters to include in the request URL. These are merged with any parameters generated from the request model.
     let additionalQueryParameters: [String: String]?
 
-    // TODO: Omit for file uploads
+    // TODO(kafkas): Omit for file uploads
     /// Additional body parameters to include in the request payload. These are merged with any parameters generated from the request model.
     let additionalBodyParameters: [String: String]?
 

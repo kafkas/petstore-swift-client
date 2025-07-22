@@ -115,7 +115,7 @@ final class HTTPClient: Sendable {
         var request = URLRequest(url: url)
 
         // Set timeout
-        // TODO: URLSession already has a timeout setting; find out if this is the right way to override it at the request level
+        // TODO(kafkas): URLSession already has a timeout setting; find out if this is the right way to override it at the request level
         if let timeout = requestOptions?.timeout {
             request.timeoutInterval = TimeInterval(timeout)
         }
@@ -205,7 +205,7 @@ final class HTTPClient: Sendable {
         switch requestBody {
         case .jsonEncodable(let encodableBody):
             do {
-                // TODO: Merge requestOptions.additionalBodyParameters into this
+                // TODO(kafkas): Merge requestOptions.additionalBodyParameters into this
                 return try jsonEncoder.encode(encodableBody)
             } catch {
                 precondition(
@@ -222,10 +222,7 @@ final class HTTPClient: Sendable {
         _ request: URLRequest
     ) async throws -> (Data, String?) {
         do {
-            print("Executing request: \(request)")  // For debugging
-
-            // TODO: Handle retries
-
+            // TODO(kafkas): Handle retries
             let (data, response) = try await clientConfig.urlSession.data(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -260,7 +257,6 @@ final class HTTPClient: Sendable {
     private func handleErrorResponse(statusCode: Int, data: Data) throws {
         let errorResponse = parseErrorResponse(statusCode: statusCode, from: data)
 
-        // TODO: We should not refer to ClientError here since this is meant to be an "as is" file
         switch statusCode {
         case 400:
             throw ClientError.badRequest(errorResponse)
